@@ -1,1 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 English Adventure Quiz | Ages 7–9</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Baloo+2:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:#00B4D8; --navy:#023E8A; --mint:#90E0EF;
+    --coral:#FF6B6B; --gold:#FFB703; --lime:#70E000;
+    --bg:#F0F8FF; --card:#FFFFFF; --dark:#1A1A2E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Poppins',sans-serif;
+    background:var(--bg);
+    background-image:
+      linear-gradient(135deg,rgba(0,180,216,0.1) 0%,transparent 50%),
+      linear-gradient(225deg,rgba(255,183,3,0.1) 0%,transparent 50%);
+    min-height:100vh; color:var(--dark);
+  }
+  .header{
+    background:linear-gradient(135deg,var(--navy),var(--teal));
+    padding:30px 20px; text-align:center;
+    clip-path:polygon(0 0,100% 0,100% 85%,50% 100%,0 85%);
+    padding-bottom:60px; margin-bottom:10px;
+  }
+  .header h1{font-family:'Baloo 2',cursive;font-size:2.5rem;color:#fff;text-shadow:2px 2px 0 rgba(0,0,0,0.2);}
+  .header p{color:var(--mint);font-size:1rem;font-weight:600;}
+  .container{max-width:820px;margin:0 auto;padding:20px;}
+  .card{
+    background:var(--card); border-radius:20px;
+    padding:28px; margin-bottom:20px;
+    box-shadow:0 4px 20px rgba(2,62,138,0.1);
+    border-top:4px solid var(--teal); display:none;
+  }
+  .name-card{display:block;}
+  .sec-header{
+    display:flex; align-items:center; gap:12px; margin-bottom:22px;
+  }
+  .sec-icon{
+    width:50px;height:50px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.5rem;flex-shrink:0;
+  }
+  .sec-title{font-family:'Baloo 2',cursive;font-size:1.4rem;}
+  .sec-subtitle{font-size:0.85rem;color:#666;font-weight:600;}
+  .name-label{font-weight:700;font-size:1.1rem;margin-bottom:8px;color:var(--navy);}
+  .name-input{
+    width:100%;padding:14px 18px;font-size:1.1rem;
+    border:2px solid #C0D8F0;border-radius:12px;
+    font-family:'Poppins',sans-serif;outline:none;transition:.3s;
+  }
+  .name-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,180,216,0.2);}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:13px 35px;border:none;border-radius:50px;
+    font-family:'Poppins',sans-serif;font-size:1rem;font-weight:700;
+    color:#fff;cursor:pointer;transition:all .25s;
+    box-shadow:0 4px 15px rgba(0,0,0,0.2);
+  }
+  .btn-start{background:linear-gradient(135deg,var(--navy),var(--teal));}
+  .btn-next{background:linear-gradient(135deg,var(--teal),var(--lime));}
+  .btn-submit{background:linear-gradient(135deg,var(--coral),#FF4500);}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.25);}
+  .q-block{margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid #EEF4FF;}
+  .q-block:last-of-type{border-bottom:none;}
+  .q-num{
+    display:inline-block;background:var(--gold);color:var(--dark);
+    width:28px;height:28px;border-radius:8px;text-align:center;
+    line-height:28px;font-weight:800;font-size:.85rem;margin-right:8px;
+  }
+  .q-text{font-size:1.05rem;font-weight:600;margin-bottom:14px;line-height:1.6;}
+  .options{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .opt{
+    padding:11px 14px;border:2px solid #DDE8F5;border-radius:12px;
+    background:#FAFCFF;cursor:pointer;font-family:'Poppins',sans-serif;
+    font-size:.95rem;font-weight:600;transition:all .2s;text-align:left;
+  }
+  .opt:hover{border-color:var(--teal);background:#EFF9FC;}
+  .opt.selected{border-color:var(--navy);background:var(--navy);color:#fff;}
+  .fill-input{
+    width:100%;padding:11px 15px;font-size:1rem;
+    border:2px solid #DDE8F5;border-radius:12px;
+    font-family:'Poppins',sans-serif;outline:none;transition:.3s;
+  }
+  .fill-input:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,180,216,0.15);}
+  .textarea-q{
+    width:100%;padding:12px 15px;font-size:1rem;
+    border:2px solid #DDE8F5;border-radius:12px;
+    font-family:'Poppins',sans-serif;outline:none;transition:.3s;
+    resize:vertical;min-height:90px;
+  }
+  .textarea-q:focus{border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,107,107,0.15);}
+  /* Vocab scramble */
+  .vocab-target{
+    display:flex;flex-wrap:wrap;gap:6px;
+    justify-content:center;padding:12px;
+    background:#F0FAFF;border-radius:12px;margin:10px 0;min-height:60px;
+  }
+  .letter-slot{
+    width:36px;height:40px;border:2px dashed #90C4D8;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:1.2rem;font-weight:800;color:var(--navy);
+    background:#fff;transition:.2s;
+  }
+  .letter-slot.filled{border-color:var(--teal);background:#E0F5FC;}
+  .letters-pool{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0;}
+  .pool-chip{
+    padding:8px 13px;background:var(--gold);border:none;
+    border-radius:10px;font-size:1rem;font-weight:800;
+    cursor:pointer;transition:.2s;color:var(--dark);
+  }
+  .pool-chip:hover{transform:scale(1.08);background:var(--coral);color:#fff;}
+  .pool-chip.used{opacity:.25;pointer-events:none;}
+  .clear-btn{background:none;border:none;color:var(--coral);font-weight:700;cursor:pointer;font-size:.9rem;}
+  /* Reading */
+  .reading-box{
+    background:linear-gradient(135deg,#F0F8FF,#E8F4FD);
+    border-left:4px solid var(--teal);padding:18px;
+    border-radius:14px;font-size:1.05rem;line-height:1.9;
+    margin-bottom:18px;font-weight:500;color:var(--dark);
+  }
+  /* Progress */
+  .progress-wrap{background:#E0EEF8;border-radius:50px;height:8px;margin-bottom:20px;}
+  .progress-fill{height:100%;border-radius:50px;background:linear-gradient(90deg,var(--teal),var(--lime));transition:width .5s;}
+  /* Steps */
+  .steps{display:flex;justify-content:center;gap:8px;margin-bottom:22px;}
+  .step{
+    width:36px;height:36px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:.8rem;background:#DDE8F5;color:#999;
+    transition:.3s;cursor:default;
+  }
+  .step.active{background:var(--teal);color:#fff;box-shadow:0 4px 12px rgba(0,180,216,0.4);}
+  .step.done{background:var(--lime);color:var(--dark);}
+  /* Result */
+  .result-card{
+    background:#fff;border-radius:24px;padding:35px;
+    box-shadow:0 8px 35px rgba(2,62,138,0.12);display:none;
+  }
+  .result-hero{
+    background:linear-gradient(135deg,var(--navy),var(--teal));
+    border-radius:20px;padding:30px;text-align:center;color:#fff;
+    margin-bottom:25px;
+  }
+  .big-score{font-family:'Baloo 2',cursive;font-size:4rem;line-height:1;}
+  .score-label{font-size:1rem;opacity:.8;margin-top:5px;}
+  .result-emoji{font-size:2.5rem;margin-bottom:12px;}
+  .result-grade{font-family:'Baloo 2',cursive;font-size:1.8rem;}
+  .breakdown-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+  .bd-item{
+    background:#F5F9FF;border-radius:14px;padding:14px;
+    display:flex;flex-direction:column;gap:4px;
+  }
+  .bd-label{font-size:.85rem;color:#666;font-weight:600;}
+  .bd-score{font-family:'Baloo 2',cursive;font-size:1.4rem;color:var(--navy);}
+  .teacher-notes{
+    background:#FFFDF0;border-radius:14px;padding:18px;
+    border-left:4px solid var(--gold);
+  }
+  .teacher-notes h3{font-family:'Baloo 2',cursive;font-size:1.2rem;color:var(--gold);margin-bottom:12px;}
+  .tn-row{display:flex;gap:8px;padding:7px 0;border-bottom:1px solid #FFF0C0;font-size:.95rem;}
+  .tn-key{font-weight:700;min-width:140px;color:var(--navy);}
+  @media(max-width:500px){
+    .options{grid-template-columns:1fr;}
+    .breakdown-grid{grid-template-columns:1fr;}
+    .header h1{font-size:1.8rem;}
+  }
+</style>
+</head>
+<body>
 
+<div class="header">
+  <h1>🚀 English Adventure Quiz</h1>
+  <p>Ages 7 – 9 | Grammar · Vocabulary · Reading · Writing</p>
+</div>
+
+<div class="container">
+
+  <!-- NAME -->
+  <div class="card name-card">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#E8F4FD">👋</div>
+      <div>
+        <div class="sec-title" style="color:var(--navy)">Welcome, Explorer!</div>
+        <div class="sec-subtitle">Enter your name to begin</div>
+      </div>
+    </div>
+    <label class="name-label">Your Name:</label>
+    <input class="name-input" type="text" id="studentName" placeholder="Write your full name...">
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn btn-start" onclick="startQuiz()">Start Adventure 🚀</button>
+    </div>
+  </div>
+
+  <!-- STEPS -->
+  <div class="steps" id="steps" style="display:none">
+    <div class="step active" id="st0">1</div>
+    <div class="step" id="st1">2</div>
+    <div class="step" id="st2">3</div>
+    <div class="step" id="st3">4</div>
+    <div class="step" id="st4">5</div>
+    <div class="step" id="st5">6</div>
+  </div>
+
+  <!-- SEC 0: Grammar - Simple Present & Past -->
+  <div class="card" id="sec0">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#E8F4FD;color:var(--navy)">📚</div>
+      <div>
+        <div class="sec-title" style="color:var(--navy)">Part 1: Grammar</div>
+        <div class="sec-subtitle">Simple Present & Simple Past</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="pb0" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">1</span>She _____ to school every day.</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'g1','a')">go</button>
+        <button class="opt" onclick="pick(this,'g1','b')">goes</button>
+        <button class="opt" onclick="pick(this,'g1','c')">went</button>
+        <button class="opt" onclick="pick(this,'g1','d')">going</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">2</span>They _____ football yesterday afternoon.</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'g2','a')">play</button>
+        <button class="opt" onclick="pick(this,'g2','b')">plays</button>
+        <button class="opt" onclick="pick(this,'g2','c')">played</button>
+        <button class="opt" onclick="pick(this,'g2','d')">playing</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">3</span>He is _____ his homework right now.</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'g3','a')">do</button>
+        <button class="opt" onclick="pick(this,'g3','b')">did</button>
+        <button class="opt" onclick="pick(this,'g3','c')">does</button>
+        <button class="opt" onclick="pick(this,'g3','d')">doing</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">4</span>We _____ a movie when the lights went off. (past continuous)</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'g4','a')">watched</button>
+        <button class="opt" onclick="pick(this,'g4','b')">watch</button>
+        <button class="opt" onclick="pick(this,'g4','c')">were watching</button>
+        <button class="opt" onclick="pick(this,'g4','d')">are watching</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">5</span>Which sentence is correct?</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'g5','a')">She don't like cats.</button>
+        <button class="opt" onclick="pick(this,'g5','b')">She doesn't likes cats.</button>
+        <button class="opt" onclick="pick(this,'g5','c')">She doesn't like cats.</button>
+        <button class="opt" onclick="pick(this,'g5','d')">She not like cats.</button>
+      </div>
+    </div>
+
+    <div style="text-align:center"><button class="btn btn-next" onclick="nextSec(0)">Next ➡</button></div>
+  </div>
+
+  <!-- SEC 1: Grammar continued + connectives -->
+  <div class="card" id="sec1">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#FFF3E0;color:var(--gold)">🔗</div>
+      <div>
+        <div class="sec-title" style="color:var(--gold)">Part 2: Grammar & Connectives</div>
+        <div class="sec-subtitle">Pronouns, connectives & more</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="pb1" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">6</span>I like pizza _____ I don't like olives.</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'c1','a')">because</button>
+        <button class="opt" onclick="pick(this,'c1','b')">but</button>
+        <button class="opt" onclick="pick(this,'c1','c')">so</button>
+        <button class="opt" onclick="pick(this,'c1','d')">although</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">7</span>She was tired _____ she went to bed early.</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'c2','a')">but</button>
+        <button class="opt" onclick="pick(this,'c2','b')">and</button>
+        <button class="opt" onclick="pick(this,'c2','c')">so</button>
+        <button class="opt" onclick="pick(this,'c2','d')">because</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">8</span>_____ is your favourite subject at school?</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'c3','a')">Who</button>
+        <button class="opt" onclick="pick(this,'c3','b')">Where</button>
+        <button class="opt" onclick="pick(this,'c3','c')">What</button>
+        <button class="opt" onclick="pick(this,'c3','d')">When</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">9</span>Choose the correct pronoun: "Tom and I are friends. _____ play football together."</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'c4','a')">They</button>
+        <button class="opt" onclick="pick(this,'c4','b')">We</button>
+        <button class="opt" onclick="pick(this,'c4','c')">He</button>
+        <button class="opt" onclick="pick(this,'c4','d')">Us</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">10</span>The cat _____ on the sofa when the dog barked.</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'c5','a')">sleep</button>
+        <button class="opt" onclick="pick(this,'c5','b')">slept</button>
+        <button class="opt" onclick="pick(this,'c5','c')">was sleeping</button>
+        <button class="opt" onclick="pick(this,'c5','d')">is sleeping</button>
+      </div>
+    </div>
+
+    <div style="text-align:center"><button class="btn btn-next" onclick="nextSec(1)">Next ➡</button></div>
+  </div>
+
+  <!-- SEC 2: Pronunciation & vocabulary -->
+  <div class="card" id="sec2">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#FFF0F3;color:var(--coral)">🔡</div>
+      <div>
+        <div class="sec-title" style="color:var(--coral)">Part 3: Pronunciation & Vocabulary</div>
+        <div class="sec-subtitle">Words & sounds</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="pb2" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">11</span>Which word rhymes with "night"?</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'p1','a')">Note</button>
+        <button class="opt" onclick="pick(this,'p1','b')">Light</button>
+        <button class="opt" onclick="pick(this,'p1','c')">Neat</button>
+        <button class="opt" onclick="pick(this,'p1','d')">Knit</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">12</span>The silent letter in "knight" is:</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'p2','a')">n</button>
+        <button class="opt" onclick="pick(this,'p2','b')">g</button>
+        <button class="opt" onclick="pick(this,'p2','c')">k</button>
+        <button class="opt" onclick="pick(this,'p2','d')">t</button>
+      </div>
+    </div>
+
+    <!-- Vocab scramble -->
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">13</span>🔡 Unscramble: An animal that lives in the sea and has 8 arms.</p>
+      <div class="vocab-target" id="vt1">
+        <div class="letter-slot" id="vs1_0"></div>
+        <div class="letter-slot" id="vs1_1"></div>
+        <div class="letter-slot" id="vs1_2"></div>
+        <div class="letter-slot" id="vs1_3"></div>
+        <div class="letter-slot" id="vs1_4"></div>
+        <div class="letter-slot" id="vs1_5"></div>
+        <div class="letter-slot" id="vs1_6"></div>
+        <div class="letter-slot" id="vs1_7"></div>
+      </div>
+      <div class="letters-pool" id="lp1">
+        <button class="pool-chip" onclick="pickL('1','O')">O</button>
+        <button class="pool-chip" onclick="pickL('1','C')">C</button>
+        <button class="pool-chip" onclick="pickL('1','T')">T</button>
+        <button class="pool-chip" onclick="pickL('1','O')">O</button>
+        <button class="pool-chip" onclick="pickL('1','P')">P</button>
+        <button class="pool-chip" onclick="pickL('1','U')">U</button>
+        <button class="pool-chip" onclick="pickL('1','S')">S</button>
+        <button class="pool-chip" onclick="pickL('1','E')">E</button>
+      </div>
+      <button class="clear-btn" onclick="clearV('1')">↩ Clear</button>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">14</span>🔡 Unscramble: The opposite of "hot".</p>
+      <div class="vocab-target" id="vt2">
+        <div class="letter-slot" id="vs2_0"></div>
+        <div class="letter-slot" id="vs2_1"></div>
+        <div class="letter-slot" id="vs2_2"></div>
+        <div class="letter-slot" id="vs2_3"></div>
+      </div>
+      <div class="letters-pool" id="lp2">
+        <button class="pool-chip" onclick="pickL('2','L')">L</button>
+        <button class="pool-chip" onclick="pickL('2','C')">C</button>
+        <button class="pool-chip" onclick="pickL('2','O')">O</button>
+        <button class="pool-chip" onclick="pickL('2','D')">D</button>
+      </div>
+      <button class="clear-btn" onclick="clearV('2')">↩ Clear</button>
+    </div>
+
+    <div style="text-align:center"><button class="btn btn-next" onclick="nextSec(2)">Next ➡</button></div>
+  </div>
+
+  <!-- SEC 3: Reading -->
+  <div class="card" id="sec3">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#E8FFE8;color:var(--lime)">📖</div>
+      <div>
+        <div class="sec-title" style="color:#2E7D00">Part 4: Reading</div>
+        <div class="sec-subtitle">Read carefully, then answer!</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="pb3" style="width:0%"></div></div>
+
+    <div class="reading-box">
+      Last summer, my family went on a great vacation to the beach. We stayed in a small, cosy hotel near the sea. Every morning, we swam in the cool water and built sandcastles on the shore. My little brother found a beautiful shell and kept it as a souvenir. In the evenings, we ate fresh fish at a restaurant with colourful lights. It was the best holiday I ever had because we all laughed, played, and relaxed together. I can't wait to go back next year!
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">15</span>Where did the family go for their vacation?</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'r1','a')">The mountains</button>
+        <button class="opt" onclick="pick(this,'r1','b')">The beach</button>
+        <button class="opt" onclick="pick(this,'r1','c')">The city</button>
+        <button class="opt" onclick="pick(this,'r1','d')">The countryside</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">16</span>What did the little brother find?</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'r2','a')">A crab</button>
+        <button class="opt" onclick="pick(this,'r2','b')">A starfish</button>
+        <button class="opt" onclick="pick(this,'r2','c')">A shell</button>
+        <button class="opt" onclick="pick(this,'r2','d')">A coin</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">17</span>Why was it the best holiday? (choose the best reason from the text)</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'r3','a')">Because the hotel was big</button>
+        <button class="opt" onclick="pick(this,'r3','b')">Because they laughed, played and relaxed together</button>
+        <button class="opt" onclick="pick(this,'r3','c')">Because the food was expensive</button>
+        <button class="opt" onclick="pick(this,'r3','d')">Because the beach was empty</button>
+      </div>
+    </div>
+
+    <div style="text-align:center"><button class="btn btn-next" onclick="nextSec(3)">Next ➡</button></div>
+  </div>
+
+  <!-- SEC 4: Vocabulary (more) -->
+  <div class="card" id="sec4">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#F5E8FF;color:#8B00FF">🧩</div>
+      <div>
+        <div class="sec-title" style="color:#6A0DAD">Part 5: More Vocabulary</div>
+        <div class="sec-subtitle">Word meaning & use</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="pb4" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">18</span>🔡 Unscramble: A place where you borrow books.</p>
+      <div class="vocab-target" id="vt3">
+        <div class="letter-slot" id="vs3_0"></div><div class="letter-slot" id="vs3_1"></div>
+        <div class="letter-slot" id="vs3_2"></div><div class="letter-slot" id="vs3_3"></div>
+        <div class="letter-slot" id="vs3_4"></div><div class="letter-slot" id="vs3_5"></div>
+        <div class="letter-slot" id="vs3_6"></div>
+      </div>
+      <div class="letters-pool" id="lp3">
+        <button class="pool-chip" onclick="pickL('3','L')">L</button>
+        <button class="pool-chip" onclick="pickL('3','I')">I</button>
+        <button class="pool-chip" onclick="pickL('3','B')">B</button>
+        <button class="pool-chip" onclick="pickL('3','R')">R</button>
+        <button class="pool-chip" onclick="pickL('3','A')">A</button>
+        <button class="pool-chip" onclick="pickL('3','R')">R</button>
+        <button class="pool-chip" onclick="pickL('3','Y')">Y</button>
+      </div>
+      <button class="clear-btn" onclick="clearV('3')">↩ Clear</button>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">19</span>What does "enormous" mean?</p>
+      <div class="options">
+        <button class="opt" onclick="pick(this,'v4','a')">Very tiny</button>
+        <button class="opt" onclick="pick(this,'v4','b')">Very fast</button>
+        <button class="opt" onclick="pick(this,'v4','c')">Very big</button>
+        <button class="opt" onclick="pick(this,'v4','d')">Very cold</button>
+      </div>
+    </div>
+
+    <div style="text-align:center"><button class="btn btn-next" onclick="nextSec(4)">Next ➡</button></div>
+  </div>
+
+  <!-- SEC 5: Writing + Speaking -->
+  <div class="card" id="sec5">
+    <div class="sec-header">
+      <div class="sec-icon" style="background:#FFF0E0;color:var(--coral)">✍️</div>
+      <div>
+        <div class="sec-title" style="color:var(--coral)">Part 6: Writing & Speaking</div>
+        <div class="sec-subtitle">Your ideas matter!</div>
+      </div>
+    </div>
+    <div class="progress-wrap"><div class="progress-fill" id="pb5" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">20</span>✍️ Write 3–5 sentences about <b>a great vacation</b> you had or would like to have. Use at least one connective (because / but / so / and).</p>
+      <textarea class="textarea-q" id="writing_task" placeholder="My great vacation was / would be ..."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text">🗣️ <b>Speaking task (in class):</b> Choose any interesting subject to talk about with your teacher. What will your topic be?</p>
+      <input type="text" class="fill-input" id="speaking_topic" placeholder="I want to talk about ...">
+    </div>
+
+    <div style="text-align:center;margin-top:15px">
+      <button class="btn btn-submit" onclick="submitQuiz()">🎯 Finish & See Results!</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-card" id="resultCard">
+    <div class="result-hero">
+      <div class="result-emoji" id="r_emoji">🌟</div>
+      <div class="big-score" id="r_score">0</div>
+      <div class="score-label" id="r_label">out of 19 scored questions</div>
+      <div class="result-grade" id="r_grade">Great Job!</div>
+    </div>
+
+    <h3 style="font-family:'Baloo 2',cursive;color:var(--navy);margin-bottom:15px">📊 Breakdown</h3>
+    <div class="breakdown-grid">
+      <div class="bd-item"><div class="bd-label">📚 Grammar (Simple Present & Past)</div><div class="bd-score" id="bd0">0/5</div></div>
+      <div class="bd-item"><div class="bd-label">🔗 Grammar & Connectives</div><div class="bd-score" id="bd1">0/5</div></div>
+      <div class="bd-item"><div class="bd-label">🔡 Pronunciation & Vocab</div><div class="bd-score" id="bd2">0/4</div></div>
+      <div class="bd-item"><div class="bd-label">📖 Reading</div><div class="bd-score" id="bd3">0/3</div></div>
+      <div class="bd-item"><div class="bd-label">🧩 Vocabulary</div><div class="bd-score" id="bd4">0/2</div></div>
+    </div>
+
+    <div class="teacher-notes">
+      <h3>📝 Teacher Notes</h3>
+      <div class="tn-row"><span class="tn-key">Student:</span><span id="tn_name">—</span></div>
+      <div class="tn-row"><span class="tn-key">Date:</span><span id="tn_date">—</span></div>
+      <div class="tn-row"><span class="tn-key">Writing Sample:</span></div>
+      <div style="padding:10px;background:#FAFAFA;border-radius:10px;margin:5px 0;font-size:.95rem" id="tn_writing">—</div>
+      <div class="tn-row"><span class="tn-key">Speaking Topic:</span><span id="tn_speaking">—</span></div>
+    </div>
+
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn btn-start" onclick="window.print()">🖨️ Print Results</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const correctAnswers = {
+  g1:'b', g2:'c', g3:'d', g4:'c', g5:'c',
+  c1:'b', c2:'c', c3:'c', c4:'b', c5:'c',
+  p1:'b', p2:'c',
+  r1:'b', r2:'c', r3:'b',
+  v4:'c'
+};
+const vocabAnswers2 = { '1':'OCTOPUS', '2':'COLD', '3':'LIBRARY' };
+const userAns={}, vocabProgress={};
+
+function pick(btn,q,v){
+  btn.closest('.q-block').querySelectorAll('.opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  userAns[q]=v;
+}
+function pickL(vid, letter){
+  if(!vocabProgress[vid]) vocabProgress[vid]=[];
+  const ans=vocabAnswers2[vid], prog=vocabProgress[vid], idx=prog.length;
+  if(idx>=ans.length) return;
+  prog.push(letter);
+  const slot=document.getElementById('vs'+vid+'_'+idx);
+  slot.textContent=letter; slot.classList.add('filled');
+  const chips=document.querySelectorAll('#lp'+vid+' .pool-chip');
+  for(const c of chips){ if(c.textContent===letter&&!c.classList.contains('used')){c.classList.add('used');break;} }
+}
+function clearV(vid){
+  vocabProgress[vid]=[];
+  const ans=vocabAnswers2[vid];
+  for(let i=0;i<ans.length;i++){
+    const s=document.getElementById('vs'+vid+'_'+i);
+    s.textContent=''; s.classList.remove('filled');
+  }
+  document.querySelectorAll('#lp'+vid+' .pool-chip').forEach(c=>c.classList.remove('used'));
+}
+function startQuiz(){
+  const n=document.getElementById('studentName').value.trim();
+  if(!n){alert('Please enter your name!');return;}
+  document.querySelector('.name-card').style.display='none';
+  document.getElementById('steps').style.display='flex';
+  showSec(0);
+}
+function showSec(i){
+  document.querySelectorAll('.card').forEach(c=>c.style.display='none');
+  document.getElementById('sec'+i).style.display='block';
+  for(let j=0;j<6;j++){
+    const d=document.getElementById('st'+j);
+    d.className='step'+(j<i?' done':j===i?' active':'');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(()=>{document.getElementById('pb'+i).style.width='100%';},100);
+}
+function nextSec(i){ showSec(i+1); }
+
+function submitQuiz(){
+  const s0=['g1','g2','g3','g4','g5'].filter(k=>userAns[k]===correctAnswers[k]).length;
+  const s1=['c1','c2','c3','c4','c5'].filter(k=>userAns[k]===correctAnswers[k]).length;
+  const s2mc=['p1','p2'].filter(k=>userAns[k]===correctAnswers[k]).length;
+  const vocab1=(vocabProgress['1']||[]).join('')==='OCTOPUS'?1:0;
+  const vocab2=(vocabProgress['2']||[]).join('')==='COLD'?1:0;
+  const s2=s2mc+vocab1+vocab2;
+  const s3=['r1','r2','r3'].filter(k=>userAns[k]===correctAnswers[k]).length;
+  const vocab3=(vocabProgress['3']||[]).join('')==='LIBRARY'?1:0;
+  const s4=vocab3+(userAns['v4']===correctAnswers['v4']?1:0);
+  const total=s0+s1+s2+s3+s4;
+  document.getElementById('r_score').textContent=total;
+  document.getElementById('bd0').textContent=s0+'/5';
+  document.getElementById('bd1').textContent=s1+'/5';
+  document.getElementById('bd2').textContent=s2+'/4';
+  document.getElementById('bd3').textContent=s3+'/3';
+  document.getElementById('bd4').textContent=s4+'/2';
+  const pct=(total/19)*100;
+  let em='⭐', gr='Good Try!';
+  if(pct>=85){em='🏆';gr='Excellent Explorer!';}
+  else if(pct>=65){em='🚀';gr='Great Adventure!';}
+  else if(pct>=45){em='👍';gr='Good Effort!';}
+  document.getElementById('r_emoji').textContent=em;
+  document.getElementById('r_grade').textContent=gr;
+  document.getElementById('tn_name').textContent=document.getElementById('studentName').value;
+  document.getElementById('tn_date').textContent=new Date().toLocaleDateString();
+  document.getElementById('tn_writing').textContent=document.getElementById('writing_task').value||'—';
+  document.getElementById('tn_speaking').textContent=document.getElementById('speaking_topic').value||'—';
+  document.querySelectorAll('.card').forEach(c=>c.style.display='none');
+  document.getElementById('steps').style.display='none';
+  document.getElementById('resultCard').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
