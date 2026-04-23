@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⭐ My English Fun Quiz! ⭐</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FF6B9D;
+    --yellow: #FFD93D;
+    --blue: #6BCBF7;
+    --green: #6BCB77;
+    --purple: #C77DFF;
+    --orange: #FF9A3C;
+    --bg: #FFF5FB;
+    --white: #FFFFFF;
+    --dark: #3A3A5C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    background-image: radial-gradient(circle at 10% 20%, rgba(255,107,157,0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 90% 80%, rgba(107,203,247,0.15) 0%, transparent 40%);
+    min-height: 100vh;
+    color: var(--dark);
+  }
+  .stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star {
+    position: absolute; font-size: 1.5rem;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(180deg); }
+  }
+  .container {
+    max-width: 800px; margin: 0 auto; padding: 20px;
+    position: relative; z-index: 1;
+  }
+  .header {
+    text-align: center; padding: 30px 20px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    border-radius: 30px; margin-bottom: 25px;
+    box-shadow: 0 8px 30px rgba(255,107,157,0.4);
+    position: relative; overflow: hidden;
+  }
+  .header::before {
+    content: ''; position: absolute; top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+  }
+  .header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem; color: white;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.15);
+    margin-bottom: 8px;
+  }
+  .header p { color: rgba(255,255,255,0.9); font-size: 1.1rem; font-weight: 700; }
+  .name-section {
+    background: white; border-radius: 25px; padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    text-align: center; margin-bottom: 25px;
+  }
+  .name-section h2 { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--purple); margin-bottom: 20px; }
+  .name-input {
+    width: 100%; padding: 15px 20px; font-size: 1.4rem;
+    border: 3px solid var(--purple); border-radius: 15px;
+    font-family: 'Nunito', sans-serif; text-align: center;
+    outline: none; transition: all 0.3s;
+    background: #FAF5FF;
+  }
+  .name-input:focus { border-color: var(--pink); box-shadow: 0 0 0 4px rgba(255,107,157,0.2); }
+  .btn {
+    display: inline-block; padding: 15px 40px;
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem;
+    color: white; border: none; border-radius: 50px;
+    cursor: pointer; transition: all 0.3s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    margin-top: 15px;
+  }
+  .btn-start { background: linear-gradient(135deg, var(--green), #4CAF50); }
+  .btn-next { background: linear-gradient(135deg, var(--blue), #2196F3); }
+  .btn-submit { background: linear-gradient(135deg, var(--orange), #FF6B00); }
+  .btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 25px rgba(0,0,0,0.25); }
+  .btn:active { transform: scale(0.97); }
+  .section-card {
+    background: white; border-radius: 25px; padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 20px; display: none;
+  }
+  .section-title {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+    padding: 10px 20px; border-radius: 50px; color: white;
+    display: inline-block; margin-bottom: 20px;
+  }
+  .q-block { margin-bottom: 25px; padding-bottom: 25px; border-bottom: 2px dashed #EEE; }
+  .q-block:last-child { border-bottom: none; }
+  .q-text { font-size: 1.2rem; font-weight: 700; margin-bottom: 15px; color: var(--dark); line-height: 1.5; }
+  .q-num {
+    display: inline-block; width: 35px; height: 35px;
+    background: var(--yellow); border-radius: 50%;
+    text-align: center; line-height: 35px; font-weight: 900;
+    margin-right: 10px; font-size: 1rem;
+  }
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .opt-btn {
+    padding: 12px 15px; border: 3px solid #E0E0E0;
+    border-radius: 15px; background: white; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-size: 1.1rem; font-weight: 700;
+    transition: all 0.2s; text-align: center;
+  }
+  .opt-btn:hover { border-color: var(--purple); background: #FAF5FF; transform: scale(1.03); }
+  .opt-btn.selected { border-color: var(--purple); background: var(--purple); color: white; }
+  .sound-btn {
+    display: block; width: 100%; padding: 15px;
+    margin: 8px 0; border: 3px solid #E0E0E0;
+    border-radius: 15px; background: white; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-size: 1.2rem; font-weight: 700;
+    transition: all 0.2s; text-align: center;
+  }
+  .sound-btn:hover { border-color: var(--blue); background: #EFF9FF; }
+  .sound-btn.selected { border-color: var(--blue); background: var(--blue); color: white; }
+  .text-input-q {
+    width: 100%; padding: 12px 15px; font-size: 1.2rem;
+    border: 3px solid #E0E0E0; border-radius: 15px;
+    font-family: 'Nunito', sans-serif; outline: none; transition: 0.3s;
+  }
+  .text-input-q:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(107,203,119,0.2); }
+  .textarea-q {
+    width: 100%; padding: 12px 15px; font-size: 1.1rem;
+    border: 3px solid #E0E0E0; border-radius: 15px;
+    font-family: 'Nunito', sans-serif; outline: none; transition: 0.3s;
+    resize: vertical; min-height: 80px;
+  }
+  .textarea-q:focus { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(255,154,60,0.2); }
+  .vocab-word {
+    display: inline-flex; gap: 8px; flex-wrap: wrap;
+    justify-content: center; margin: 10px 0;
+  }
+  .letter-box {
+    width: 40px; height: 45px; border: 3px solid #DDD;
+    border-radius: 10px; display: flex; align-items: center;
+    justify-content: center; font-size: 1.4rem; font-weight: 900;
+    background: #FAFAFA; cursor: pointer; transition: 0.2s;
+    user-select: none;
+  }
+  .letter-box.filled { border-color: var(--pink); background: #FFF0F6; color: var(--pink); }
+  .letters-bank {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    justify-content: center; margin: 15px 0;
+  }
+  .letter-chip {
+    width: 42px; height: 42px; background: var(--yellow);
+    border: none; border-radius: 10px; font-size: 1.3rem; font-weight: 900;
+    cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center;
+  }
+  .letter-chip:hover { transform: scale(1.1); background: var(--orange); }
+  .letter-chip.used { opacity: 0.3; pointer-events: none; }
+  .reading-para {
+    background: #F0FFF4; border-left: 5px solid var(--green);
+    padding: 20px; border-radius: 15px; font-size: 1.15rem;
+    line-height: 1.9; margin-bottom: 20px; font-weight: 600;
+  }
+  .progress-bar-wrap {
+    background: #EEE; border-radius: 50px; height: 12px; margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .progress-bar { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--pink), var(--purple)); transition: width 0.5s; }
+  .result-screen {
+    background: white; border-radius: 30px; padding: 40px;
+    text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    display: none;
+  }
+  .score-circle {
+    width: 150px; height: 150px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--yellow), var(--orange));
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    margin: 0 auto 25px; box-shadow: 0 8px 30px rgba(255,154,60,0.4);
+  }
+  .score-num { font-family: 'Fredoka One', cursive; font-size: 3rem; color: white; }
+  .score-total { font-size: 1rem; color: rgba(255,255,255,0.8); font-weight: 700; }
+  .result-title { font-family: 'Fredoka One', cursive; font-size: 2rem; margin-bottom: 10px; color: var(--purple); }
+  .result-emoji { font-size: 3rem; margin-bottom: 15px; }
+  .breakdown { text-align: left; margin-top: 20px; }
+  .breakdown-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 15px; border-radius: 15px; margin-bottom: 8px; font-weight: 700;
+  }
+  .breakdown-label { display: flex; align-items: center; gap: 10px; }
+  .score-tag {
+    padding: 5px 15px; border-radius: 50px; color: white;
+    font-size: 0.9rem; font-weight: 700;
+  }
+  .note-section {
+    background: #FFF9E6; border-radius: 15px; padding: 20px;
+    margin-top: 20px; text-align: left;
+  }
+  .note-title { font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: var(--orange); margin-bottom: 10px; }
+  .note-item { padding: 6px 0; border-bottom: 1px solid #FFE58A; font-size: 1rem; }
+  .nav-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+  .dot { width: 14px; height: 14px; border-radius: 50%; background: #DDD; transition: 0.3s; }
+  .dot.active { background: var(--purple); transform: scale(1.3); }
+  .dot.done { background: var(--green); }
+  @media(max-width:500px){
+    .header h1{font-size:2rem;}
+    .options{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="starsContainer"></div>
+
+<div class="container">
+  <!-- HEADER -->
+  <div class="header">
+    <h1>⭐ Fun English Quiz! ⭐</h1>
+    <p>For Super Stars — Age 5 🌈</p>
+  </div>
+
+  <!-- NAME ENTRY -->
+  <div class="name-section" id="nameSection">
+    <h2>👋 What is your name?</h2>
+    <input class="name-input" type="text" id="studentName" placeholder="Write your name here...">
+    <br>
+    <button class="btn btn-start" onclick="startQuiz()">Let's Start! 🚀</button>
+  </div>
+
+  <!-- NAV DOTS -->
+  <div class="nav-dots" id="navDots" style="display:none">
+    <div class="dot active" id="dot0"></div>
+    <div class="dot" id="dot1"></div>
+    <div class="dot" id="dot2"></div>
+    <div class="dot" id="dot3"></div>
+    <div class="dot" id="dot4"></div>
+  </div>
+
+  <!-- SECTION 1: Sounds & Phonics -->
+  <div class="section-card" id="sec0">
+    <span class="section-title" style="background:linear-gradient(135deg,#FF6B9D,#FF8E53)">🔤 Part 1: Sounds & Phonics</span>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="pb0" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">1</span>What sound does the letter <b>A</b> make? 🍎</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s0q1','a')">/ æ / — like Apple</button>
+        <button class="opt-btn" onclick="pick(this,'s0q1','b')">/ eɪ / — like Cake</button>
+        <button class="opt-btn" onclick="pick(this,'s0q1','c')">/ ɒ / — like Orange</button>
+        <button class="opt-btn" onclick="pick(this,'s0q1','d')">/ ɪ / — like Ink</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">2</span>Which word starts with the sound <b>/b/</b>? 🐝</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s0q2','a')">🐱 Cat</button>
+        <button class="opt-btn" onclick="pick(this,'s0q2','b')">🐝 Bee</button>
+        <button class="opt-btn" onclick="pick(this,'s0q2','c')">🐕 Dog</button>
+        <button class="opt-btn" onclick="pick(this,'s0q2','d')">🐟 Fish</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">3</span>What colour is this? 🔴</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s0q3','a')">Blue</button>
+        <button class="opt-btn" onclick="pick(this,'s0q3','b')">Green</button>
+        <button class="opt-btn" onclick="pick(this,'s0q3','c')">Red</button>
+        <button class="opt-btn" onclick="pick(this,'s0q3','d')">Yellow</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">4</span>Which day comes after Monday? 📅</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s0q4','a')">Sunday</button>
+        <button class="opt-btn" onclick="pick(this,'s0q4','b')">Wednesday</button>
+        <button class="opt-btn" onclick="pick(this,'s0q4','c')">Tuesday</button>
+        <button class="opt-btn" onclick="pick(this,'s0q4','d')">Friday</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">5</span>Read this sentence: "The <b>cat</b> sat on the <b>mat</b>." — What did the cat sit on?</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s0q5','a')">A chair</button>
+        <button class="opt-btn" onclick="pick(this,'s0q5','b')">A mat</button>
+        <button class="opt-btn" onclick="pick(this,'s0q5','c')">A bed</button>
+        <button class="opt-btn" onclick="pick(this,'s0q5','d')">A box</button>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn btn-next" onclick="nextSection(0)">Next Part ➡️</button>
+    </div>
+  </div>
+
+  <!-- SECTION 2: Colours & Days -->
+  <div class="section-card" id="sec1">
+    <span class="section-title" style="background:linear-gradient(135deg,#6BCB77,#2196F3)">🌈 Part 2: Colours & Days</span>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="pb1" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">6</span>How many days are in a week? 🗓️</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s1q1','a')">5 days</button>
+        <button class="opt-btn" onclick="pick(this,'s1q1','b')">6 days</button>
+        <button class="opt-btn" onclick="pick(this,'s1q1','c')">7 days</button>
+        <button class="opt-btn" onclick="pick(this,'s1q1','d')">8 days</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">7</span>What colour is the sky? ☁️</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s1q2','a')">Green</button>
+        <button class="opt-btn" onclick="pick(this,'s1q2','b')">Blue</button>
+        <button class="opt-btn" onclick="pick(this,'s1q2','c')">Red</button>
+        <button class="opt-btn" onclick="pick(this,'s1q2','d')">Pink</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">8</span>Which day is the last day of the week? 🏖️</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s1q3','a')">Monday</button>
+        <button class="opt-btn" onclick="pick(this,'s1q3','b')">Friday</button>
+        <button class="opt-btn" onclick="pick(this,'s1q3','c')">Sunday</button>
+        <button class="opt-btn" onclick="pick(this,'s1q3','d')">Wednesday</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">9</span>Bananas are ______ in colour. 🍌</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s1q4','a')">Purple</button>
+        <button class="opt-btn" onclick="pick(this,'s1q4','b')">Orange</button>
+        <button class="opt-btn" onclick="pick(this,'s1q4','c')">Yellow</button>
+        <button class="opt-btn" onclick="pick(this,'s1q4','d')">White</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">10</span>Which month comes first in the year? 🎆</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s1q5','a')">March</button>
+        <button class="opt-btn" onclick="pick(this,'s1q5','b')">December</button>
+        <button class="opt-btn" onclick="pick(this,'s1q5','c')">January</button>
+        <button class="opt-btn" onclick="pick(this,'s1q5','d')">June</button>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn btn-next" onclick="nextSection(1)">Next Part ➡️</button>
+    </div>
+  </div>
+
+  <!-- SECTION 3: Vocabulary (unscramble) -->
+  <div class="section-card" id="sec2">
+    <span class="section-title" style="background:linear-gradient(135deg,#C77DFF,#6BCBF7)">🔡 Part 3: Vocabulary Fun!</span>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="pb2" style="width:0%"></div></div>
+
+    <p style="font-weight:700;margin-bottom:20px">Tap the letters in the right order to make the word! 🎯</p>
+
+    <!-- Vocab 1 -->
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">11</span>This animal says "Meow"! 🐱</p>
+      <div class="vocab-word" id="vw1">
+        <div class="letter-box" id="lb1_0"></div>
+        <div class="letter-box" id="lb1_1"></div>
+        <div class="letter-box" id="lb1_2"></div>
+      </div>
+      <div class="letters-bank" id="bank1">
+        <button class="letter-chip" onclick="addLetter('1','T')">T</button>
+        <button class="letter-chip" onclick="addLetter('1','A')">A</button>
+        <button class="letter-chip" onclick="addLetter('1','C')">C</button>
+      </div>
+      <button onclick="clearWord('1')" style="background:none;border:none;cursor:pointer;color:#FF6B9D;font-weight:700">↩ Clear</button>
+    </div>
+
+    <!-- Vocab 2 -->
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">12</span>It is red and we eat it. It is a ____! 🍎</p>
+      <div class="vocab-word" id="vw2">
+        <div class="letter-box" id="lb2_0"></div>
+        <div class="letter-box" id="lb2_1"></div>
+        <div class="letter-box" id="lb2_2"></div>
+        <div class="letter-box" id="lb2_3"></div>
+        <div class="letter-box" id="lb2_4"></div>
+      </div>
+      <div class="letters-bank" id="bank2">
+        <button class="letter-chip" onclick="addLetter('2','P')">P</button>
+        <button class="letter-chip" onclick="addLetter('2','E')">E</button>
+        <button class="letter-chip" onclick="addLetter('2','L')">L</button>
+        <button class="letter-chip" onclick="addLetter('2','A')">A</button>
+        <button class="letter-chip" onclick="addLetter('2','P')">P</button>
+      </div>
+      <button onclick="clearWord('2')" style="background:none;border:none;cursor:pointer;color:#FF6B9D;font-weight:700">↩ Clear</button>
+    </div>
+
+    <!-- Vocab 3 -->
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">13</span>You sleep in this. It is a ____! 🛏️</p>
+      <div class="vocab-word" id="vw3">
+        <div class="letter-box" id="lb3_0"></div>
+        <div class="letter-box" id="lb3_1"></div>
+        <div class="letter-box" id="lb3_2"></div>
+      </div>
+      <div class="letters-bank" id="bank3">
+        <button class="letter-chip" onclick="addLetter('3','D')">D</button>
+        <button class="letter-chip" onclick="addLetter('3','E')">E</button>
+        <button class="letter-chip" onclick="addLetter('3','B')">B</button>
+      </div>
+      <button onclick="clearWord('3')" style="background:none;border:none;cursor:pointer;color:#FF6B9D;font-weight:700">↩ Clear</button>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn btn-next" onclick="nextSection(2)">Next Part ➡️</button>
+    </div>
+  </div>
+
+  <!-- SECTION 4: Reading -->
+  <div class="section-card" id="sec3">
+    <span class="section-title" style="background:linear-gradient(135deg,#FFD93D,#FF6B00)">📖 Part 4: Reading Time!</span>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="pb3" style="width:0%"></div></div>
+
+    <div class="reading-para">
+      My name is Sam. I have a red ball. I play in the park every day. I have a dog. His name is Buddy. Buddy is brown. We run and play together. I love my dog! 🐕
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">14</span>What colour is Sam's ball?</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s3q1','a')">Blue</button>
+        <button class="opt-btn" onclick="pick(this,'s3q1','b')">Red</button>
+        <button class="opt-btn" onclick="pick(this,'s3q1','c')">Yellow</button>
+        <button class="opt-btn" onclick="pick(this,'s3q1','d')">Green</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">15</span>Where does Sam play?</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s3q2','a')">At school</button>
+        <button class="opt-btn" onclick="pick(this,'s3q2','b')">At home</button>
+        <button class="opt-btn" onclick="pick(this,'s3q2','c')">In the park</button>
+        <button class="opt-btn" onclick="pick(this,'s3q2','d')">In the garden</button>
+      </div>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">16</span>What colour is Buddy?</p>
+      <div class="options">
+        <button class="opt-btn" onclick="pick(this,'s3q3','a')">Black</button>
+        <button class="opt-btn" onclick="pick(this,'s3q3','b')">White</button>
+        <button class="opt-btn" onclick="pick(this,'s3q3','c')">Brown</button>
+        <button class="opt-btn" onclick="pick(this,'s3q3','d')">Orange</button>
+      </div>
+    </div>
+
+    <div style="text-align:center">
+      <button class="btn btn-next" onclick="nextSection(3)">Next Part ➡️</button>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Speaking Topics (written notes) -->
+  <div class="section-card" id="sec4">
+    <span class="section-title" style="background:linear-gradient(135deg,#6BCBF7,#C77DFF)">🗣️ Part 5: Tell Me!</span>
+    <div class="progress-bar-wrap"><div class="progress-bar" id="pb4" style="width:0%"></div></div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">17</span>🎁 Bring something from home. What will you bring? Write its name:</p>
+      <input type="text" class="text-input-q" id="bring_item" placeholder="I will bring ...">
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">18</span>✏️ Draw or write one thing you like to do! (Write a sentence)</p>
+      <textarea class="textarea-q" id="like_activity" placeholder="I like to ..."></textarea>
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">19</span>🌟 Which sound is your favourite? (like /s/ or /m/ or /b/)</p>
+      <input type="text" class="text-input-q" id="fav_sound" placeholder="My favourite sound is ...">
+    </div>
+
+    <div class="q-block">
+      <p class="q-text"><span class="q-num">20</span>💬 Tell your teacher one interesting thing about yourself! Write it:</p>
+      <textarea class="textarea-q" id="interesting_fact" placeholder="Something interesting about me is ..."></textarea>
+    </div>
+
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn btn-submit" onclick="submitQuiz()">🎉 Finish Quiz!</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="result-screen" id="resultScreen">
+    <div class="result-emoji" id="resultEmoji">🌟</div>
+    <div class="score-circle">
+      <span class="score-num" id="scoreNum">0</span>
+      <span class="score-total" id="scoreTot">/16</span>
+    </div>
+    <h2 class="result-title" id="resultTitle">Amazing!</h2>
+    <p style="font-size:1.1rem;color:#666" id="resultMsg"></p>
+
+    <div class="breakdown">
+      <h3 style="font-family:'Fredoka One',cursive;color:var(--purple);margin-bottom:15px">📊 Score Breakdown</h3>
+      <div class="breakdown-item" style="background:#FFF0F6">
+        <div class="breakdown-label">🔤 Sounds & Phonics</div>
+        <span class="score-tag" style="background:var(--pink)" id="br0">0/5</span>
+      </div>
+      <div class="breakdown-item" style="background:#F0FFF4">
+        <div class="breakdown-label">🌈 Colours & Days</div>
+        <span class="score-tag" style="background:var(--green)" id="br1">0/5</span>
+      </div>
+      <div class="breakdown-item" style="background:#F5F0FF">
+        <div class="breakdown-label">📖 Reading</div>
+        <span class="score-tag" style="background:var(--purple)" id="br3">0/3</span>
+      </div>
+      <div class="breakdown-item" style="background:#FFFBF0">
+        <div class="breakdown-label">🔡 Vocabulary</div>
+        <span class="score-tag" style="background:var(--orange)" id="br2">0/3</span>
+      </div>
+    </div>
+
+    <div class="note-section">
+      <p class="note-title">📝 Teacher Notes</p>
+      <p class="note-item"><b>Student:</b> <span id="tn_name">—</span></p>
+      <p class="note-item"><b>Date:</b> <span id="tn_date">—</span></p>
+      <p class="note-item"><b>Will bring:</b> <span id="tn_bring">—</span></p>
+      <p class="note-item"><b>Favourite activity:</b> <span id="tn_activity">—</span></p>
+      <p class="note-item"><b>Favourite sound:</b> <span id="tn_sound">—</span></p>
+      <p class="note-item"><b>Interesting fact:</b> <span id="tn_fact">—</span></p>
+    </div>
+
+    <button class="btn btn-start" onclick="window.print()" style="margin-top:20px">🖨️ Print Result</button>
+  </div>
+
+</div>
+
+<script>
+// Generate floating stars
+const starsEl = document.getElementById('starsContainer');
+const starChars = ['⭐','🌟','✨','💫','🎈','🌈','❤️'];
+for(let i=0;i<15;i++){
+  const s = document.createElement('div');
+  s.className='star';
+  s.textContent = starChars[Math.floor(Math.random()*starChars.length)];
+  s.style.left = Math.random()*100+'%';
+  s.style.top = Math.random()*100+'%';
+  s.style.animationDelay = Math.random()*6+'s';
+  s.style.animationDuration = (4+Math.random()*4)+'s';
+  s.style.fontSize = (1+Math.random())+'rem';
+  starsEl.appendChild(s);
+}
+
+// Answers
+const answers = {
+  s0q1:'a', s0q2:'b', s0q3:'c', s0q4:'c', s0q5:'b',
+  s1q1:'c', s1q2:'b', s1q3:'c', s1q4:'c', s1q5:'c',
+  s3q1:'b', s3q2:'c', s3q3:'c'
+};
+const vocabAnswers = { '1':'CAT', '2':'APPLE', '3':'BED' };
+const userAns = {};
+const vocabProgress = { '1':[], '2':[], '3':[] };
+
+function pick(btn, qId, val){
+  const btns = btn.closest('.q-block').querySelectorAll('.opt-btn');
+  btns.forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  userAns[qId] = val;
+}
+
+function addLetter(vid, letter){
+  const ans = vocabAnswers[vid];
+  const prog = vocabProgress[vid];
+  const idx = prog.length;
+  if(idx >= ans.length) return;
+  prog.push(letter);
+  const box = document.getElementById('lb'+vid+'_'+idx);
+  box.textContent = letter;
+  box.classList.add('filled');
+  const chips = document.querySelectorAll('#bank'+vid+' .letter-chip');
+  for(let c of chips){
+    if(c.textContent===letter && !c.classList.contains('used')){ c.classList.add('used'); break; }
+  }
+}
+
+function clearWord(vid){
+  vocabProgress[vid] = [];
+  const ans = vocabAnswers[vid];
+  for(let i=0;i<ans.length;i++){
+    const box = document.getElementById('lb'+vid+'_'+i);
+    box.textContent=''; box.classList.remove('filled');
+  }
+  document.querySelectorAll('#bank'+vid+' .letter-chip').forEach(c=>c.classList.remove('used'));
+}
+
+function startQuiz(){
+  const n = document.getElementById('studentName').value.trim();
+  if(!n){ alert("Please write your name! 😊"); return; }
+  document.getElementById('nameSection').style.display='none';
+  document.getElementById('navDots').style.display='flex';
+  showSection(0);
+}
+
+let currentSec=0;
+function showSection(i){
+  document.querySelectorAll('.section-card').forEach(s=>s.style.display='none');
+  document.getElementById('sec'+i).style.display='block';
+  document.querySelectorAll('.dot').forEach((d,j)=>{
+    d.className='dot'+(j<i?' done':j===i?' active':'');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  // animate progress bar
+  setTimeout(()=>{ document.getElementById('pb'+i).style.width='100%'; },100);
+}
+
+function nextSection(i){
+  currentSec=i+1;
+  if(currentSec<5) showSection(currentSec);
+}
+
+function scoreSection(keys, prefix){
+  let score=0;
+  for(const k of keys){ if(userAns[prefix+k]===answers[prefix+k]) score++; }
+  return score;
+}
+
+function submitQuiz(){
+  const sec0Score = ['q1','q2','q3','q4','q5'].filter(k=>userAns['s0'+k]===answers['s0'+k]).length;
+  const sec1Score = ['q1','q2','q3','q4','q5'].filter(k=>userAns['s1'+k]===answers['s1'+k]).length;
+  const sec3Score = ['q1','q2','q3'].filter(k=>userAns['s3'+k]===answers['s3'+k]).length;
+  let vocabScore=0;
+  for(const v of ['1','2','3']){
+    if(vocabProgress[v].join('')===vocabAnswers[v]) vocabScore++;
+  }
+  const total = sec0Score+sec1Score+sec3Score+vocabScore;
+  const max=16;
+  document.getElementById('scoreNum').textContent=total;
+  document.getElementById('scoreTot').textContent='/'+max;
+  document.getElementById('br0').textContent=sec0Score+'/5';
+  document.getElementById('br1').textContent=sec1Score+'/5';
+  document.getElementById('br3').textContent=sec3Score+'/3';
+  document.getElementById('br2').textContent=vocabScore+'/3';
+  const pct = (total/max)*100;
+  let emoji='⭐', title='Good Try!', msg='Keep practising and you will be amazing!';
+  if(pct>=85){ emoji='🌟🌟🌟'; title='Super Star!'; msg='You are an English star! Amazing work!'; }
+  else if(pct>=65){ emoji='⭐⭐'; title='Well Done!'; msg='Great job! A little more practice and you will be a star!'; }
+  else if(pct>=40){ emoji='😊'; title='Good Try!'; msg='Nice effort! Let\'s practice some more together!'; }
+  document.getElementById('resultEmoji').textContent=emoji;
+  document.getElementById('resultTitle').textContent=title;
+  document.getElementById('resultMsg').textContent=msg;
+  const name = document.getElementById('studentName').value;
+  document.getElementById('tn_name').textContent=name;
+  document.getElementById('tn_date').textContent=new Date().toLocaleDateString();
+  document.getElementById('tn_bring').textContent=document.getElementById('bring_item').value||'—';
+  document.getElementById('tn_activity').textContent=document.getElementById('like_activity').value||'—';
+  document.getElementById('tn_sound').textContent=document.getElementById('fav_sound').value||'—';
+  document.getElementById('tn_fact').textContent=document.getElementById('interesting_fact').value||'—';
+  document.querySelectorAll('.section-card').forEach(s=>s.style.display='none');
+  document.getElementById('navDots').style.display='none';
+  document.getElementById('resultScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
