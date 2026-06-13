@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Future Tech Camp™ — Build • Code • Create • Innovate</title>
+<style>
+  :root{
+    --bg:#0a1220;
+    --bg-soft:#0e1830;
+    --surface:#131f38;
+    --surface-2:#1b2c4d;
+    --border:#28395c;
+    --text:#e8eefb;
+    --text-dim:#90a4c6;
+    --accent:#2fe3c6;      /* mission teal */
+    --accent-2:#ff9d4d;    /* energy amber */
+    --accent-3:#8b93ff;    /* AI violet */
+    --radius:14px;
+    --display:'Outfit', 'Segoe UI', sans-serif;
+    --body:'Inter', 'Segoe UI', sans-serif;
+    --mono:'JetBrains Mono', 'Courier New', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    font-family:var(--body);
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.65;
+    background-image:
+      linear-gradient(180deg, rgba(47,227,198,.05), transparent 300px),
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.025) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,.025) 40px);
+  }
+
+  h1,h2,h3,h4{font-family:var(--display); font-weight:600; margin:0; color:#fff;}
+  a{color:var(--accent);}
+  ::selection{background:var(--accent); color:#06160f;}
+
+  /* ===== Layout shell ===== */
+  .shell{display:flex; min-height:100vh;}
+
+  /* ===== Sidebar nav ===== */
+  .sidenav{
+    width:268px; flex-shrink:0;
+    background:var(--bg-soft);
+    border-right:1px solid var(--border);
+    position:fixed; top:0; left:0; bottom:0;
+    overflow-y:auto; padding:28px 18px 40px;
+    transform:translateX(0);
+    transition:transform .25s ease;
+    z-index:50;
+    scrollbar-width:thin;
+  }
+  .sidenav::-webkit-scrollbar{width:6px;}
+  .sidenav::-webkit-scrollbar-thumb{background:var(--surface-2); border-radius:4px;}
+
+  .brand-mark{display:flex; align-items:center; gap:10px; padding:0 8px 22px; border-bottom:1px solid var(--border); margin-bottom:14px;}
+  .brand-mark .dot{width:12px; height:12px; border-radius:3px; background:var(--accent); box-shadow:0 0 14px var(--accent); transform:rotate(45deg);}
+  .brand-mark span{font-family:var(--mono); font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--text-dim);}
+
+  .nav-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px;}
+  .nav-list a{
+    display:flex; align-items:baseline; gap:10px;
+    text-decoration:none; color:var(--text-dim);
+    font-size:.86rem; padding:8px 10px; border-radius:8px;
+    transition:background .15s ease, color .15s ease;
+  }
+  .nav-list a .num{font-family:var(--mono); font-size:.72rem; color:var(--accent); min-width:22px;}
+  .nav-list a:hover{background:var(--surface); color:var(--text);}
+  .nav-list a.active{background:var(--surface-2); color:#fff;}
+
+  .nav-close{display:none;}
+
+  /* ===== Main content ===== */
+  .content{margin-left:268px; flex:1; min-width:0;}
+  .container{max-width:980px; margin:0 auto; padding:0 28px;}
+
+  /* ===== Top bar (mobile) ===== */
+  .topbar{
+    display:none; position:sticky; top:0; z-index:40;
+    background:rgba(10,18,32,.85); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+    padding:14px 18px; align-items:center; justify-content:space-between;
+  }
+  .topbar .brand-mark{border:none; padding:0; margin:0;}
+  .menu-btn{
+    background:var(--surface); border:1px solid var(--border); color:var(--text);
+    border-radius:8px; padding:8px 12px; font-family:var(--mono); font-size:.85rem; cursor:pointer;
+  }
+
+  .overlay{display:none; position:fixed; inset:0; background:rgba(5,9,18,.6); z-index:45;}
+  .overlay.show{display:block;}
+
+  /* ===== Hero ===== */
+  .hero{
+    padding:72px 0 56px; border-bottom:1px solid var(--border);
+    position:relative; overflow:hidden;
+  }
+  .hero .eyebrow{margin-bottom:14px;}
+  .hero h1{font-size:clamp(2.4rem, 6vw, 4rem); letter-spacing:-.01em; line-height:1.05;}
+  .hero h1 .tm{font-size:.5em; vertical-align:super; color:var(--accent);}
+  .hero .sub{font-family:var(--mono); color:var(--accent-2); letter-spacing:.05em; margin-top:14px; font-size:1.05rem;}
+  .hero .tagline{color:var(--text-dim); max-width:60ch; margin-top:18px; font-size:1.05rem;}
+
+  .skyline-wrap{margin-top:46px;}
+  .skyline-wrap svg{width:100%; height:auto; display:block;}
+  .pulse{animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+  @media (prefers-reduced-motion:reduce){.pulse{animation:none;}}
+
+  /* ===== Sections ===== */
+  .section{padding:64px 0; border-bottom:1px solid var(--border);}
+  .section:last-of-type{border-bottom:none;}
+  .eyebrow{
+    font-family:var(--mono); font-size:.75rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--accent); display:block;
+  }
+  .section h2{font-size:clamp(1.6rem, 3.4vw, 2.3rem); margin:.35rem 0 1rem;}
+  .lede{color:var(--text-dim); max-width:68ch; margin-bottom:1.6rem;}
+
+  h3{font-size:1.15rem; margin-bottom:.6rem; color:var(--accent);}
+  h4{font-size:1rem; margin-bottom:.4rem; color:#fff;}
+
+  p{margin:.5rem 0;}
+
+  /* ===== Grids & cards ===== */
+  .grid{display:grid; gap:18px;}
+  .grid-2{grid-template-columns:repeat(auto-fit, minmax(260px,1fr));}
+  .grid-3{grid-template-columns:repeat(auto-fit, minmax(220px,1fr));}
+  .grid-4{grid-template-columns:repeat(auto-fit, minmax(190px,1fr));}
+
+  .card{
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:20px 22px;
+  }
+  .card.accent{border-color:var(--accent); box-shadow:0 0 0 1px rgba(47,227,198,.15);}
+  .card.amber{border-color:var(--accent-2);}
+  .card.violet{border-color:var(--accent-3);}
+
+  .card-label{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--text-dim); margin-bottom:8px; display:block;
+  }
+
+  ul{margin:.4rem 0 .4rem 0; padding-left:0; list-style:none;}
+  ul li{position:relative; padding-left:22px; margin:.35rem 0; color:var(--text-dim);}
+  ul.checks li::before{content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:700;}
+  ul.dash li::before{content:"—"; position:absolute; left:0; color:var(--accent-2);}
+  ul.dot li::before{content:"•"; position:absolute; left:4px; color:var(--accent-3);}
+  ol{margin:.4rem 0; padding-left:1.3rem; color:var(--text-dim);}
+  ol li{margin:.35rem 0;}
+
+  .pill-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:.6rem;}
+  .pill{
+    border:1px solid var(--border); border-radius:999px; padding:6px 14px;
+    font-size:.85rem; color:var(--text); background:var(--surface);
+  }
+  .pill.amber{border-color:var(--accent-2); color:var(--accent-2);}
+  .pill.accent{border-color:var(--accent); color:var(--accent);}
+
+  /* ===== Tables ===== */
+  .table-scroll{overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius);}
+  table{width:100%; border-collapse:collapse; min-width:480px;}
+  th,td{padding:12px 16px; text-align:left; border-bottom:1px solid var(--border); font-size:.92rem;}
+  thead th{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent); background:var(--surface); white-space:nowrap;
+  }
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--surface);}
+
+  /* ===== Round timeline (signature element) ===== */
+  .round-timeline{position:relative; padding-left:46px; margin-top:8px;}
+  .round-timeline::before{
+    content:""; position:absolute; left:18px; top:8px; bottom:8px; width:2px;
+    background:linear-gradient(180deg, var(--accent), var(--accent-3));
+    opacity:.35;
+  }
+  .round-step{position:relative; margin-bottom:28px;}
+  .round-step:last-child{margin-bottom:0;}
+  .round-step .marker{
+    position:absolute; left:-46px; top:0; width:36px; height:36px;
+    border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-weight:700; color:var(--accent);
+  }
+  .round-step .card{margin-left:0;}
+  .round-step .meta{font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-2);}
+
+  /* ===== Before / After & funnel chains ===== */
+  .compare{display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:stretch;}
+  .compare .arrow{display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:1.6rem; font-family:var(--mono);}
+  @media (max-width:640px){.compare{grid-template-columns:1fr;} .compare .arrow{transform:rotate(90deg); margin:-4px 0;}}
+
+  .chain{display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-top:.6rem;}
+  .chain .pill{margin:0;}
+  .chain .sep{color:var(--accent-3); font-family:var(--mono);}
+
+  /* ===== Badges / ranks ===== */
+  .hex-row{display:flex; flex-wrap:wrap; gap:14px; margin-top:.8rem;}
+  .hex{
+    clip-path:polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    background:var(--surface-2); border:1px solid var(--border);
+    padding:14px 26px; font-size:.85rem; color:var(--text); text-align:center;
+    min-width:120px;
+  }
+  .hex .step{display:block; font-family:var(--mono); font-size:.7rem; color:var(--accent); margin-bottom:2px;}
+
+  /* ===== Final outcome checklist ===== */
+  .outcome-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:12px; margin-top:1rem;}
+  .outcome-item{
+    display:flex; gap:10px; align-items:flex-start;
+    background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px 14px;
+  }
+  .outcome-item .tick{color:var(--accent); font-weight:700;}
+
+  footer{
+    text-align:center; padding:40px 20px 60px; color:var(--text-dim);
+    font-family:var(--mono); font-size:.8rem; letter-spacing:.08em;
+  }
+
+  /* ===== Responsive ===== */
+  @media (max-width:1024px){
+    .sidenav{transform:translateX(-100%); box-shadow:0 0 40px rgba(0,0,0,.4);}
+    .sidenav.open{transform:translateX(0);}
+    .content{margin-left:0;}
+    .topbar{display:flex;}
+    .nav-close{display:inline-flex; margin-left:auto; background:none; border:1px solid var(--border); color:var(--text-dim); border-radius:8px; padding:6px 10px; cursor:pointer; font-family:var(--mono);}
+    .brand-mark{justify-content:space-between;}
+  }
+  @media (max-width:600px){
+    .hero{padding:48px 0 40px;}
+    .section{padding:46px 0;}
+    th,td{padding:10px 12px; font-size:.85rem;}
+  }
+
+  /* Focus visibility */
+  a:focus-visible, button:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="shell">
+
+  <!-- ===== Sidebar Navigation ===== -->
+  <nav class="sidenav" id="sidenav" aria-label="Section navigation">
+    <div class="brand-mark">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Future Tech Camp™</span>
+      </div>
+      <button class="nav-close" id="navClose" aria-label="Close menu">✕</button>
+    </div>
+    <ul class="nav-list">
+      <li><a href="#identity"><span class="num">01</span>Camp Identity</a></li>
+      <li><a href="#age-division"><span class="num">02</span>Age Division</a></li>
+      <li><a href="#duration"><span class="num">03</span>Camp Duration System</a></li>
+      <li><a href="#weekly-system"><span class="num">04</span>Weekly System</a></li>
+      <li><a href="#curriculum-architecture"><span class="num">05</span>Curriculum Architecture</a></li>
+      <li><a href="#learning-pathway"><span class="num">06</span>Learning Pathway</a></li>
+      <li><a href="#programming"><span class="num">07</span>Programming Curriculum</a></li>
+      <li><a href="#robotics"><span class="num">08</span>Robotics Curriculum</a></li>
+      <li><a href="#ict"><span class="num">09</span>ICT + Baccalaureate</a></li>
+      <li><a href="#english"><span class="num">10</span>English Integration</a></li>
+      <li><a href="#project-based"><span class="num">11</span>Project-Based Learning</a></li>
+      <li><a href="#gamification"><span class="num">12</span>Gamification System</a></li>
+      <li><a href="#schedules"><span class="num">13</span>Daily Schedules</a></li>
+      <li><a href="#final-structure"><span class="num">14</span>Final Recommended Structure</a></li>
+      <li><a href="#business-strategy"><span class="num">15</span>Business Strategy</a></li>
+      <li><a href="#marketing"><span class="num">16</span>Marketing Positioning</a></li>
+      <li><a href="#premium"><span class="num">17</span>Premium Experience Ideas</a></li>
+      <li><a href="#implementation"><span class="num">18</span>Implementation Plan</a></li>
+      <li><a href="#curriculum-map"><span class="num">19</span>Curriculum Map</a></li>
+      <li><a href="#executive-recommendation"><span class="num">20</span>Executive Recommendation</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== Main Content ===== -->
+  <div class="content">
+
+    <!-- Mobile top bar -->
+    <div class="topbar">
+      <div class="brand-mark">
+        <span class="dot" aria-hidden="true"></span>
+        <span>Future Tech Camp™</span>
+      </div>
+      <button class="menu-btn" id="menuBtn">☰ Menu</button>
+    </div>
+
+    <!-- ===== Hero ===== -->
+    <header class="hero">
+      <div class="container">
+        <span class="eyebrow">Build • Code • Create • Innovate</span>
+        <h1>FUTURE TECH CAMP<span class="tm">™</span></h1>
+        <p class="sub">The Ultimate Programming + Robotics + AI + English Summer Experience (Ages 12–16)</p>
+        <p class="tagline">"A Future Technology Mission." — A combination of Apple Innovation Culture, NASA Mission-Based Learning, LEGO Engineering Creativity, and Future School Technology Education. This is not summer classes. This is a mission.</p>
+
+        <div class="skyline-wrap" aria-hidden="true">
+          <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg">
+            <!-- ground line -->
+            <line x1="0" y1="190" x2="800" y2="190" stroke="#28395c" stroke-width="2"/>
+            <!-- Round 1: small structure -->
+            <g>
+              <rect x="60" y="140" width="90" height="50" fill="#1b2c4d" stroke="#28395c"/>
+              <rect x="75" y="155" width="10" height="10" fill="#2fe3c6"/>
+              <rect x="95" y="155" width="10" height="10" fill="#2fe3c6" opacity=".4"/>
+              <rect x="115" y="155" width="10" height="10" fill="#2fe3c6"/>
+              <text x="105" y="210" fill="#90a4c6" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">R1 · Digital Explorer</text>
+            </g>
+            <!-- Round 2: mobile innovator, taller -->
+            <g>
+              <rect x="220" y="110" width="100" height="80" fill="#1b2c4d" stroke="#28395c"/>
+              <rect x="238" y="128" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="258" y="128" width="10" height="10" fill="#ff9d4d" opacity=".4"/>
+              <rect x="278" y="128" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="238" y="150" width="10" height="10" fill="#ff9d4d" opacity=".4"/>
+              <rect x="258" y="150" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="278" y="150" width="10" height="10" fill="#ff9d4d" opacity=".4"/>
+              <text x="270" y="210" fill="#90a4c6" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">R2 · Mobile Innovator</text>
+            </g>
+            <!-- Round 3: future engineer, even taller -->
+            <g>
+              <rect x="400" y="80" width="110" height="110" fill="#1b2c4d" stroke="#28395c"/>
+              <rect x="418" y="98" width="10" height="10" fill="#8b93ff"/>
+              <rect x="440" y="98" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <rect x="462" y="98" width="10" height="10" fill="#8b93ff"/>
+              <rect x="484" y="98" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <rect x="418" y="122" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <rect x="440" y="122" width="10" height="10" fill="#8b93ff"/>
+              <rect x="462" y="122" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <rect x="484" y="122" width="10" height="10" fill="#8b93ff"/>
+              <rect x="418" y="146" width="10" height="10" fill="#8b93ff"/>
+              <rect x="440" y="146" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <rect x="462" y="146" width="10" height="10" fill="#8b93ff"/>
+              <rect x="484" y="146" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <text x="455" y="210" fill="#90a4c6" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">R3 · Future Engineer</text>
+            </g>
+            <!-- Round 4: AI & robotics innovator, tallest with antenna + drone -->
+            <g>
+              <rect x="600" y="50" width="130" height="140" fill="#1b2c4d" stroke="#2fe3c6"/>
+              <rect x="620" y="68" width="10" height="10" fill="#2fe3c6"/>
+              <rect x="644" y="68" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="668" y="68" width="10" height="10" fill="#8b93ff"/>
+              <rect x="692" y="68" width="10" height="10" fill="#2fe3c6" opacity=".4"/>
+              <rect x="620" y="92" width="10" height="10" fill="#ff9d4d" opacity=".4"/>
+              <rect x="644" y="92" width="10" height="10" fill="#8b93ff"/>
+              <rect x="668" y="92" width="10" height="10" fill="#2fe3c6"/>
+              <rect x="692" y="92" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="620" y="116" width="10" height="10" fill="#8b93ff"/>
+              <rect x="644" y="116" width="10" height="10" fill="#2fe3c6" opacity=".4"/>
+              <rect x="668" y="116" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="692" y="116" width="10" height="10" fill="#8b93ff" opacity=".4"/>
+              <rect x="620" y="140" width="10" height="10" fill="#2fe3c6"/>
+              <rect x="644" y="140" width="10" height="10" fill="#ff9d4d"/>
+              <rect x="668" y="140" width="10" height="10" fill="#8b93ff"/>
+              <rect x="692" y="140" width="10" height="10" fill="#2fe3c6" opacity=".4"/>
+              <!-- antenna -->
+              <line x1="665" y1="50" x2="665" y2="20" stroke="#2fe3c6" stroke-width="2"/>
+              <circle class="pulse" cx="665" cy="16" r="5" fill="#2fe3c6"/>
+              <text x="665" y="210" fill="#90a4c6" font-family="JetBrains Mono, monospace" font-size="12" text-anchor="middle">R4 · AI &amp; Robotics Innovator</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ============ 01 CAMP IDENTITY ============ -->
+      <section class="section" id="identity">
+        <div class="container">
+          <span class="eyebrow">01 / Camp Identity</span>
+          <h2>Brand Concept</h2>
+          <p class="lede">Imagine a combination of Apple Innovation Culture, NASA Mission-Based Learning, LEGO Engineering Creativity, and Future School Technology Education. The camp should not feel like "summer classes." It should feel like <strong>"A Future Technology Mission."</strong></p>
+
+          <h3>Camp Name Ideas — Premium Options</h3>
+          <div class="pill-row">
+            <span class="pill">1. Future Tech Camp™</span>
+            <span class="pill">2. PixelX Future Academy™</span>
+            <span class="pill">3. Code &amp; Create Summer Lab™</span>
+            <span class="pill">4. Future Innovators Camp™</span>
+            <span class="pill">5. Tech Explorers Academy™</span>
+            <span class="pill">6. NextGen Inventors Camp™</span>
+            <span class="pill">7. AI &amp; Robotics Future Camp™</span>
+            <span class="pill">8. Digital Pioneers Program™</span>
+          </div>
+
+          <div class="card accent" style="margin-top:24px;">
+            <span class="card-label">Recommended Brand</span>
+            <h2 style="margin-top:4px;">FUTURE TECH CAMP™</h2>
+            <p class="sub" style="margin-top:6px;">Build • Code • Create • Innovate</p>
+          </div>
+
+          <div class="grid grid-2" style="margin-top:24px;">
+            <div class="card">
+              <h3>Mission</h3>
+              <p>Empower young learners to become creators of technology instead of consumers of technology.</p>
+            </div>
+            <div class="card">
+              <h3>Vision</h3>
+              <p>Develop the next generation of Egyptian innovators prepared for AI, programming, robotics, and future careers.</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top:32px;">Student Transformation</h3>
+          <div class="compare">
+            <div class="card">
+              <span class="card-label">Before</span>
+              <ul class="dash">
+                <li>Uses technology</li>
+                <li>Plays games</li>
+                <li>Watches YouTube</li>
+                <li>Limited confidence</li>
+              </ul>
+            </div>
+            <div class="arrow" aria-hidden="true">→</div>
+            <div class="card accent">
+              <span class="card-label">After</span>
+              <ul class="checks">
+                <li>Builds games</li>
+                <li>Creates apps</li>
+                <li>Programs robots</li>
+                <li>Presents projects in English</li>
+                <li>Thinks like an engineer</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:24px;">
+            <h3>Parent Value Proposition</h3>
+            <p>Parents buy outcomes. Not coding classes. The promise:</p>
+            <ul class="checks">
+              <li>Better digital skills</li>
+              <li>Better English confidence</li>
+              <li>Better problem solving</li>
+              <li>Better future readiness</li>
+              <li>Productive summer</li>
+              <li>Real portfolio projects</li>
+              <li>Preparation for future ICT studies</li>
+            </ul>
+          </div>
+
+          <h3 style="margin-top:32px;">Slogan Ideas</h3>
+          <div class="pill-row">
+            <span class="pill accent">Build The Future.</span>
+            <span class="pill accent">Learn Today. Lead Tomorrow.</span>
+            <span class="pill accent">Code. Create. Innovate.</span>
+            <span class="pill accent">From Gamer To Creator.</span>
+            <span class="pill accent">Where Future Engineers Begin.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 02 AGE DIVISION ============ -->
+      <section class="section" id="age-division">
+        <div class="container">
+          <span class="eyebrow">02 / Age Division</span>
+          <h2>Group A &amp; Group B</h2>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Group A · 12–13 Years</span>
+              <h4>Characteristics</h4>
+              <ul class="dot">
+                <li>Need more gamification</li>
+                <li>Enjoy visual learning</li>
+                <li>Learn through discovery</li>
+                <li>Lower abstract reasoning</li>
+              </ul>
+              <h4 style="margin-top:14px;">Suitable Tracks</h4>
+              <div class="pill-row">
+                <span class="pill">Scratch</span>
+                <span class="pill">App Inventor</span>
+                <span class="pill">Beginner Robotics</span>
+                <span class="pill">Digital Literacy</span>
+              </div>
+            </div>
+
+            <div class="card amber">
+              <span class="card-label">Group B · 14–16 Years</span>
+              <h4>Characteristics</h4>
+              <ul class="dot">
+                <li>Better logical thinking</li>
+                <li>More independent</li>
+                <li>Career curiosity begins</li>
+                <li>Higher project ownership</li>
+              </ul>
+              <h4 style="margin-top:14px;">Suitable Tracks</h4>
+              <div class="pill-row">
+                <span class="pill amber">Python</span>
+                <span class="pill amber">Web Development</span>
+                <span class="pill amber">Arduino</span>
+                <span class="pill amber">Smart Robotics</span>
+                <span class="pill amber">AI Concepts</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Why This Division Works</h3>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Factor</th><th>12–13</th><th>14–16</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Attention Span</td><td>Lower</td><td>Higher</td></tr>
+                <tr><td>Logic Skills</td><td>Developing</td><td>Stronger</td></tr>
+                <tr><td>Project Complexity</td><td>Medium</td><td>Advanced</td></tr>
+                <tr><td>Coding Style</td><td>Visual</td><td>Text-Based</td></tr>
+                <tr><td>Competition Style</td><td>Fun Challenges</td><td>Real Projects</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 CAMP DURATION SYSTEM ============ -->
+      <section class="section" id="duration">
+        <div class="container">
+          <span class="eyebrow">03 / Camp Duration System</span>
+          <h2>2-Week vs. 3-Week Model</h2>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">2-Week Model</span>
+              <h4>Pros</h4>
+              <ul class="checks">
+                <li>Easy enrollment</li>
+                <li>Fast commitment</li>
+              </ul>
+              <h4 style="margin-top:14px;">Cons</h4>
+              <ul class="dash">
+                <li>Weak learning depth</li>
+                <li>Limited retention</li>
+                <li>Projects become rushed</li>
+              </ul>
+            </div>
+
+            <div class="card accent">
+              <span class="card-label">3-Week Model</span>
+              <h4>Pros</h4>
+              <ul class="checks">
+                <li>Stronger skill acquisition</li>
+                <li>Better friendships</li>
+                <li>Better habit formation</li>
+                <li>More impressive projects</li>
+                <li>Higher parent satisfaction</li>
+              </ul>
+              <h4 style="margin-top:14px;">Cons</h4>
+              <ul class="dash">
+                <li>Slightly larger commitment</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card accent" style="margin-top:24px;">
+            <span class="card-label">Recommendation</span>
+            <h3 style="color:#fff;">3 Weeks Per Round</h3>
+            <p>Why? Educationally, this is the optimal learning cycle:</p>
+            <div class="chain">
+              <span class="pill accent">Week 1 = Learn</span>
+              <span class="sep">→</span>
+              <span class="pill accent">Week 2 = Practice</span>
+              <span class="sep">→</span>
+              <span class="pill accent">Week 3 = Build</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 WEEKLY SYSTEM ============ -->
+      <section class="section" id="weekly-system">
+        <div class="container">
+          <span class="eyebrow">04 / Weekly System</span>
+          <h2>3 Days vs. 5 Days per Week</h2>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Option A — 3 Days/Week</span>
+              <h4>Structure</h4>
+              <p>Mon – Wed – Fri</p>
+              <h4 style="margin-top:14px;">Advantages</h4>
+              <ul class="checks">
+                <li>Easier logistics</li>
+                <li>Less burnout</li>
+                <li>Better for summer vacations</li>
+              </ul>
+              <h4 style="margin-top:14px;">Disadvantages</h4>
+              <ul class="dash">
+                <li>Slower progress</li>
+              </ul>
+            </div>
+
+            <div class="card accent">
+              <span class="card-label">Option B — 5 Days/Week</span>
+              <h4>Advantages</h4>
+              <ul class="checks">
+                <li>Faster growth</li>
+                <li>Better immersion</li>
+                <li>Stronger community</li>
+              </ul>
+              <h4 style="margin-top:14px;">Disadvantages</h4>
+              <ul class="dash">
+                <li>Fatigue risk</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card accent" style="margin-top:24px;">
+            <span class="card-label">Recommended Model</span>
+            <h3 style="color:#fff;">5 Days/Week · Monday–Friday · 3.5 Hours Daily</h3>
+            <p>Because:</p>
+            <ul class="checks">
+              <li>Summer camp should feel immersive</li>
+              <li>Better project outcomes</li>
+              <li>Better retention</li>
+            </ul>
+          </div>
+
+          <h3 style="margin-top:28px;">Daily Flow</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+              <tbody>
+                <tr><td>9:00</td><td>Arrival Mission</td></tr>
+                <tr><td>9:15</td><td>Icebreaker</td></tr>
+                <tr><td>9:30</td><td>Tech Learning</td></tr>
+                <tr><td>10:30</td><td>Challenge</td></tr>
+                <tr><td>11:00</td><td>Break</td></tr>
+                <tr><td>11:15</td><td>Project Building</td></tr>
+                <tr><td>12:30</td><td>English Tech Talk</td></tr>
+                <tr><td>1:00</td><td>Reflection</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 05 CURRICULUM ARCHITECTURE ============ -->
+      <section class="section" id="curriculum-architecture">
+        <div class="container">
+          <span class="eyebrow">05 / Complete Curriculum Architecture</span>
+          <h2>Unified Storyline: "Mission: Build A Smart Future City"</h2>
+          <p class="lede">Every round contributes. Students are not taking separate courses — they are building parts of a future city.</p>
+
+          <div class="round-timeline">
+            <div class="round-step">
+              <div class="marker">R1</div>
+              <div class="card">
+                <span class="meta">Digital Explorer</span>
+                <h3>Round 1</h3>
+                <h4>Students learn:</h4>
+                <ul class="dot">
+                  <li>Digital literacy</li>
+                  <li>Scratch</li>
+                  <li>ICT foundations</li>
+                  <li>Computational thinking</li>
+                </ul>
+                <h4 style="margin-top:10px;">Project</h4>
+                <p>Future City Interactive Simulation</p>
+              </div>
+            </div>
+
+            <div class="round-step">
+              <div class="marker">R2</div>
+              <div class="card">
+                <span class="meta">Mobile Innovator</span>
+                <h3>Round 2</h3>
+                <h4>Students learn:</h4>
+                <ul class="dot">
+                  <li>App Inventor</li>
+                  <li>UI Design</li>
+                  <li>Electronics Basics</li>
+                </ul>
+                <h4 style="margin-top:10px;">Project</h4>
+                <p>Smart City Mobile App</p>
+              </div>
+            </div>
+
+            <div class="round-step">
+              <div class="marker">R3</div>
+              <div class="card">
+                <span class="meta">Future Engineer</span>
+                <h3>Round 3</h3>
+                <h4>Students learn:</h4>
+                <ul class="dot">
+                  <li>Python</li>
+                  <li>Web Design</li>
+                  <li>Arduino</li>
+                </ul>
+                <h4 style="margin-top:10px;">Project</h4>
+                <p>Smart City Control System</p>
+              </div>
+            </div>
+
+            <div class="round-step">
+              <div class="marker">R4</div>
+              <div class="card accent">
+                <span class="meta">AI &amp; Robotics Innovator</span>
+                <h3>Round 4</h3>
+                <h4>Students learn:</h4>
+                <ul class="dot">
+                  <li>Sensors</li>
+                  <li>Smart Car</li>
+                  <li>AI Concepts</li>
+                </ul>
+                <h4 style="margin-top:10px;">Project</h4>
+                <p>Smart Autonomous City Robot</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 06 LEARNING PATHWAY ============ -->
+      <section class="section" id="learning-pathway">
+        <div class="container">
+          <span class="eyebrow">06 / Learning Pathway</span>
+          <h2>Round → Theme → Outcome</h2>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Round</th><th>Theme</th><th>Outcome</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Digital Explorer</td><td>Build Games</td></tr>
+                <tr><td>2</td><td>Mobile Innovator</td><td>Build Apps</td></tr>
+                <tr><td>3</td><td>Future Engineer</td><td>Build Software</td></tr>
+                <tr><td>4</td><td>Robotics Innovator</td><td>Build Smart Robots</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 07 PROGRAMMING CURRICULUM ============ -->
+      <section class="section" id="programming">
+        <div class="container">
+          <span class="eyebrow">07 / Programming Curriculum</span>
+          <h2>Scratch · App Inventor · Python · Web Design</h2>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Scratch Path</span>
+              <h4>Skills</h4>
+              <div class="pill-row">
+                <span class="pill">Events</span><span class="pill">Variables</span><span class="pill">Loops</span><span class="pill">Conditions</span><span class="pill">Functions</span>
+              </div>
+              <h4 style="margin-top:14px;">Mini Projects</h4>
+              <ul class="dot">
+                <li>Maze Game</li>
+                <li>Space Adventure</li>
+                <li>Quiz Game</li>
+                <li>Racing Game</li>
+              </ul>
+              <h4 style="margin-top:14px;">Final Project</h4>
+              <p>Future City Simulator</p>
+            </div>
+
+            <div class="card amber">
+              <span class="card-label">MIT App Inventor</span>
+              <h4>Skills</h4>
+              <div class="pill-row">
+                <span class="pill amber">User Interface</span><span class="pill amber">Logic Blocks</span><span class="pill amber">Databases</span><span class="pill amber">Sensors</span>
+              </div>
+              <h4 style="margin-top:14px;">Mini Projects</h4>
+              <ul class="dot">
+                <li>Calculator</li>
+                <li>Attendance App</li>
+                <li>Reminder App</li>
+              </ul>
+              <h4 style="margin-top:14px;">Final Project</h4>
+              <p>Smart City Mobile App</p>
+            </div>
+
+            <div class="card violet">
+              <span class="card-label">Python</span>
+              <h4>Skills</h4>
+              <div class="pill-row">
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Variables</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Input/Output</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Conditions</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Loops</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Functions</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Lists</span>
+              </div>
+              <h4 style="margin-top:14px;">Mini Projects</h4>
+              <ul class="dot">
+                <li>Quiz Program</li>
+                <li>Banking App</li>
+                <li>Calculator</li>
+                <li>Chatbot</li>
+              </ul>
+              <h4 style="margin-top:14px;">Final Project</h4>
+              <p>Smart City Management System</p>
+            </div>
+
+            <div class="card">
+              <span class="card-label">Web Design</span>
+              <h4>Skills</h4>
+              <div class="pill-row">
+                <span class="pill">HTML</span><span class="pill">CSS</span><span class="pill">Responsive Design</span>
+              </div>
+              <h4 style="margin-top:14px;">Projects</h4>
+              <ul class="dot">
+                <li>Personal Profile</li>
+                <li>Academy Website</li>
+                <li>Future City Website</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 08 ROBOTICS CURRICULUM ============ -->
+      <section class="section" id="robotics">
+        <div class="container">
+          <span class="eyebrow">08 / Robotics Curriculum</span>
+          <h2>From Electronics to Smart City Patrol Robot</h2>
+
+          <div class="grid grid-3">
+            <div class="card">
+              <span class="card-label">Phase 1 — Electronics Basics</span>
+              <ul class="dot">
+                <li>Electricity</li>
+                <li>Components</li>
+                <li>Circuits</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Phase 2 — Arduino Basics</span>
+              <ul class="dot">
+                <li>Inputs</li>
+                <li>Outputs</li>
+                <li>LEDs</li>
+                <li>Buzzers</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Phase 3 — Sensors</span>
+              <ul class="dot">
+                <li>Ultrasonic</li>
+                <li>IR</li>
+                <li>Light Sensor</li>
+                <li>Temperature</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Phase 4 — Movement</span>
+              <ul class="dot">
+                <li>DC Motors</li>
+                <li>Servo Motors</li>
+              </ul>
+            </div>
+            <div class="card amber">
+              <span class="card-label">Phase 5 — Smart Car</span>
+              <p>Build:</p>
+              <ul class="checks">
+                <li>Obstacle Avoidance Car</li>
+                <li>Bluetooth Car</li>
+                <li>Gesture-Controlled Car</li>
+              </ul>
+            </div>
+            <div class="card accent">
+              <span class="card-label">Final Project</span>
+              <h4>Smart Future City Patrol Robot</h4>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Recommended Hardware — Cost Optimized</h3>
+          <div class="pill-row">
+            <span class="pill">Arduino Uno</span>
+            <span class="pill">Breadboard</span>
+            <span class="pill">Ultrasonic Sensor</span>
+            <span class="pill">Servo Motor</span>
+            <span class="pill">Motor Driver</span>
+            <span class="pill">Bluetooth Module HC-05</span>
+            <span class="pill">Robot Chassis Kit</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 09 ICT + BACCALAUREATE ============ -->
+      <section class="section" id="ict">
+        <div class="container">
+          <span class="eyebrow">09 / ICT + Baccalaureate Foundation</span>
+          <h2>Core Concepts</h2>
+
+          <div class="grid grid-3">
+            <div class="card">
+              <span class="card-label">Digital Systems</span>
+              <ul class="dot">
+                <li>Hardware vs Software</li>
+                <li>Input Process Output</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Algorithms</span>
+              <ul class="dot">
+                <li>Sequencing</li>
+                <li>Logic</li>
+                <li>Decision Making</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Data</span>
+              <ul class="dot">
+                <li>Collection</li>
+                <li>Storage</li>
+                <li>Representation</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Networks</span>
+              <ul class="dot">
+                <li>Internet Basics</li>
+                <li>Cloud Basics</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Cyber Safety</span>
+              <ul class="dot">
+                <li>Passwords</li>
+                <li>Privacy</li>
+                <li>Digital Citizenship</li>
+              </ul>
+            </div>
+            <div class="card violet">
+              <span class="card-label">AI Literacy</span>
+              <ul class="dot">
+                <li>What AI Is</li>
+                <li>Ethical AI</li>
+                <li>Prompt Engineering Basics</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 10 ENGLISH INTEGRATION ============ -->
+      <section class="section" id="english">
+        <div class="container">
+          <span class="eyebrow">10 / English Integration System</span>
+          <h2>English Is Not a Separate Class</h2>
+          <p class="lede">It becomes the camp language.</p>
+
+          <h3>Weekly Themes</h3>
+          <div class="chain">
+            <span class="pill accent">Week 1 — Introducing Yourself</span>
+            <span class="sep">→</span>
+            <span class="pill accent">Week 2 — Problem Solving Language</span>
+            <span class="sep">→</span>
+            <span class="pill accent">Week 3 — Presenting Ideas</span>
+          </div>
+
+          <div class="grid grid-2" style="margin-top:24px;">
+            <div class="card">
+              <span class="card-label">Tech Vocabulary System</span>
+              <h4>Daily 5 Words — Examples</h4>
+              <div class="pill-row">
+                <span class="pill">Sensor</span>
+                <span class="pill">Variable</span>
+                <span class="pill">Function</span>
+                <span class="pill">Algorithm</span>
+                <span class="pill">Innovation</span>
+              </div>
+            </div>
+            <div class="card amber">
+              <span class="card-label">Speaking Activities</span>
+              <ul class="checks">
+                <li>Daily Team Standup</li>
+                <li>Project Pitch</li>
+                <li>Demo Presentation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 11 PROJECT-BASED LEARNING ============ -->
+      <section class="section" id="project-based">
+        <div class="container">
+          <span class="eyebrow">11 / Project-Based Learning</span>
+          <h2>Every Week</h2>
+
+          <div class="grid grid-4">
+            <div class="card">
+              <span class="card-label">Mini Project</span>
+              <p>Individual</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Team Challenge</span>
+              <p>Small Groups</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Innovation Day</span>
+              <p>Competition</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Demo Day</span>
+              <p>Presentation</p>
+            </div>
+          </div>
+
+          <div class="card accent" style="margin-top:24px;">
+            <span class="card-label">Final Showcase</span>
+            <h4>Invite:</h4>
+            <div class="pill-row">
+              <span class="pill accent">Parents</span>
+              <span class="pill accent">Friends</span>
+              <span class="pill accent">Academy Staff</span>
+            </div>
+            <h4 style="margin-top:14px;">Students present:</h4>
+            <div class="pill-row">
+              <span class="pill accent">Apps</span>
+              <span class="pill accent">Games</span>
+              <span class="pill accent">Websites</span>
+              <span class="pill accent">Robots</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 12 GAMIFICATION SYSTEM ============ -->
+      <section class="section" id="gamification">
+        <div class="container">
+          <span class="eyebrow">12 / Gamification System</span>
+          <h2>XP, Ranks &amp; Badges</h2>
+
+          <h3>XP System</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Action</th><th>XP</th></tr></thead>
+              <tbody>
+                <tr><td>Attendance</td><td>10</td></tr>
+                <tr><td>Challenge Win</td><td>50</td></tr>
+                <tr><td>Presentation</td><td>30</td></tr>
+                <tr><td>Teamwork</td><td>20</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:28px;">Tech Ranks</h3>
+          <div class="hex-row">
+            <div class="hex"><span class="step">1</span>Explorer</div>
+            <div class="hex"><span class="step">2</span>Creator</div>
+            <div class="hex"><span class="step">3</span>Builder</div>
+            <div class="hex"><span class="step">4</span>Engineer</div>
+            <div class="hex"><span class="step">5</span>Innovator</div>
+            <div class="hex"><span class="step">6</span>Future Leader</div>
+          </div>
+
+          <h3 style="margin-top:28px;">Badges</h3>
+          <div class="pill-row">
+            <span class="pill accent">Coding Hero</span>
+            <span class="pill accent">Robotics Master</span>
+            <span class="pill accent">English Speaker</span>
+            <span class="pill accent">Team Champion</span>
+            <span class="pill accent">AI Explorer</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 13 DAILY SCHEDULES ============ -->
+      <section class="section" id="schedules">
+        <div class="container">
+          <span class="eyebrow">13 / Daily Schedules</span>
+          <h2>5-Day Premium Model &amp; 3-Day Alternative</h2>
+
+          <h3>5-Day Premium Model</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+              <tbody>
+                <tr><td>9:00–9:15</td><td>Arrival Mission</td></tr>
+                <tr><td>9:15–9:30</td><td>English Warm-Up</td></tr>
+                <tr><td>9:30–10:30</td><td>Coding</td></tr>
+                <tr><td>10:30–11:00</td><td>Challenge</td></tr>
+                <tr><td>11:00–11:15</td><td>Break</td></tr>
+                <tr><td>11:15–12:15</td><td>Robotics</td></tr>
+                <tr><td>12:15–12:45</td><td>Project Lab</td></tr>
+                <tr><td>12:45–1:00</td><td>Reflection</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 style="margin-top:28px;">3-Day Alternative</h3>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Time</th><th>Activity</th></tr></thead>
+              <tbody>
+                <tr><td>9:00–9:15</td><td>Icebreaker</td></tr>
+                <tr><td>9:15–10:30</td><td>Coding</td></tr>
+                <tr><td>10:30–10:45</td><td>Break</td></tr>
+                <tr><td>10:45–12:00</td><td>Robotics</td></tr>
+                <tr><td>12:00–1:00</td><td>Project</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 14 FINAL RECOMMENDED STRUCTURE ============ -->
+      <section class="section" id="final-structure">
+        <div class="container">
+          <span class="eyebrow">14 / Final Recommended Structure</span>
+          <h2>Best Model</h2>
+
+          <div class="card accent">
+            <h3 style="color:#fff;">4 Rounds</h3>
+            <p>Each Round:</p>
+            <div class="pill-row">
+              <span class="pill accent">3 Weeks</span>
+              <span class="pill accent">5 Days Per Week</span>
+              <span class="pill accent">3.5 Hours Daily</span>
+            </div>
+            <p style="margin-top:14px;"><strong>Total: 60 Camp Days</strong></p>
+          </div>
+
+          <h3 style="margin-top:28px;">Why This Wins</h3>
+          <div class="grid grid-3">
+            <div class="card">
+              <span class="card-label">Learning</span>
+              <p>Enough time for mastery.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Marketing</span>
+              <p>Parents see clear progression.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Revenue</span>
+              <p>Multiple enrollment opportunities.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Retention</span>
+              <p>Students naturally continue.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Satisfaction</span>
+              <p>Visible project outcomes.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 15 BUSINESS STRATEGY ============ -->
+      <section class="section" id="business-strategy">
+        <div class="container">
+          <span class="eyebrow">15 / Business Strategy</span>
+          <h2>Summer → Annual Program Funnel</h2>
+
+          <div class="chain">
+            <span class="pill accent">Round 1</span>
+            <span class="sep">↓</span>
+            <span class="pill accent">Scratch Club</span>
+            <span class="sep">↓</span>
+            <span class="pill accent">Python Club</span>
+            <span class="sep">↓</span>
+            <span class="pill accent">Robotics Club</span>
+            <span class="sep">↓</span>
+            <span class="pill accent">AI Club</span>
+          </div>
+
+          <div class="grid grid-2" style="margin-top:24px;">
+            <div class="card">
+              <span class="card-label">Retention Engine</span>
+              <ul class="checks">
+                <li>Every round unlocks next level</li>
+                <li>Students want to continue</li>
+                <li>Parents see progression</li>
+              </ul>
+            </div>
+            <div class="card amber">
+              <span class="card-label">Referral Strategy</span>
+              <h4>Bring A Friend</h4>
+              <div class="pill-row">
+                <span class="pill amber">+100 XP</span>
+                <span class="pill amber">+Academy Rewards</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 16 MARKETING POSITIONING ============ -->
+      <section class="section" id="marketing">
+        <div class="container">
+          <span class="eyebrow">16 / Marketing Positioning</span>
+          <h2>Parent Hooks &amp; Student Hooks</h2>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Parent Hooks</span>
+              <ul class="checks">
+                <li>Productive Summer</li>
+                <li>Future Career Skills</li>
+                <li>English + Coding + Robotics Together</li>
+                <li>Real Projects</li>
+                <li>AI Readiness</li>
+              </ul>
+            </div>
+            <div class="card amber">
+              <span class="card-label">Student Hooks</span>
+              <ul class="checks">
+                <li>Build Games</li>
+                <li>Build Apps</li>
+                <li>Build Robots</li>
+                <li>Earn Badges</li>
+                <li>Win Challenges</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Reel Ideas</h3>
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Before / After</span>
+              <p><strong>Day 1:</strong> "I never coded."</p>
+              <p><strong>Day 21:</strong> Student presenting robot in English.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Transformation Reel</span>
+              <div class="chain">
+                <span class="pill">Scratch</span>
+                <span class="sep">→</span>
+                <span class="pill">App</span>
+                <span class="sep">→</span>
+                <span class="pill">Python</span>
+                <span class="sep">→</span>
+                <span class="pill">Robot</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 17 PREMIUM EXPERIENCE IDEAS ============ -->
+      <section class="section" id="premium">
+        <div class="container">
+          <span class="eyebrow">17 / Premium Experience Ideas</span>
+          <h2>Tech Passport, AI Day &amp; More</h2>
+
+          <div class="grid grid-3">
+            <div class="card">
+              <span class="card-label">Tech Passport</span>
+              <p>Students collect stamps.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Team Shirts</span>
+              <p>Engineering teams.</p>
+            </div>
+            <div class="card violet">
+              <span class="card-label">AI Day</span>
+              <p>Explore ChatGPT and AI tools.</p>
+            </div>
+            <div class="card">
+              <span class="card-label">Future Careers Day</span>
+              <ul class="dot">
+                <li>Software Engineer</li>
+                <li>Robotics Engineer</li>
+                <li>AI Engineer</li>
+                <li>Cybersecurity Analyst</li>
+                <li>UX Designer</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Startup Challenge</span>
+              <p>Students create:</p>
+              <div class="chain">
+                <span class="pill">Problem</span><span class="sep">→</span>
+                <span class="pill">Solution</span><span class="sep">→</span>
+                <span class="pill">Prototype</span><span class="sep">→</span>
+                <span class="pill">Pitch</span>
+              </div>
+            </div>
+            <div class="card amber">
+              <span class="card-label">Hackathon Day</span>
+              <p>6-Hour Innovation Event</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 18 IMPLEMENTATION PLAN ============ -->
+      <section class="section" id="implementation">
+        <div class="container">
+          <span class="eyebrow">18 / Implementation Plan</span>
+          <h2>Staff, Labs &amp; Hardware Budget</h2>
+
+          <div class="card accent">
+            <span class="card-label">Staff — For Every 24 Students</span>
+            <div class="pill-row">
+              <span class="pill accent">1 Lead Instructor</span>
+              <span class="pill accent">1 Robotics Instructor</span>
+              <span class="pill accent">1 English Coach</span>
+              <span class="pill accent">2 Teaching Assistants</span>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Classroom Setup</h3>
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Coding Lab</span>
+              <ul class="dot">
+                <li>24 PCs</li>
+                <li>Projector</li>
+                <li>High-Speed Internet</li>
+              </ul>
+            </div>
+            <div class="card">
+              <span class="card-label">Robotics Lab</span>
+              <ul class="dot">
+                <li>Workstations</li>
+                <li>Tool Kits</li>
+                <li>Storage Area</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card amber" style="margin-top:24px;">
+            <span class="card-label">Hardware Budget Optimization</span>
+            <p>Ratio: <strong>1 Robotics Kit per 2 Students</strong></p>
+            <p>Reduces cost by ~50% while maintaining engagement.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 19 CURRICULUM MAP ============ -->
+      <section class="section" id="curriculum-map">
+        <div class="container">
+          <span class="eyebrow">19 / Curriculum Map</span>
+          <h2>Round-by-Round Overview</h2>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr><th>Round</th><th>Programming</th><th>Robotics</th><th>English</th><th>ICT</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Scratch</td><td>Circuits</td><td>Speaking Basics</td><td>Digital Literacy</td></tr>
+                <tr><td>2</td><td>App Inventor</td><td>Sensors</td><td>Presentations</td><td>Data &amp; Networks</td></tr>
+                <tr><td>3</td><td>Python</td><td>Arduino</td><td>Technical English</td><td>Algorithms</td></tr>
+                <tr><td>4</td><td>Web + AI</td><td>Smart Car</td><td>Pitching</td><td>AI &amp; Future Tech</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 20 EXECUTIVE RECOMMENDATION ============ -->
+      <section class="section" id="executive-recommendation">
+        <div class="container">
+          <span class="eyebrow">20 / Final Executive Recommendation</span>
+          <h2>Camp Structure — Future Tech Camp™</h2>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <span class="card-label">Ages</span>
+              <div class="pill-row">
+                <span class="pill">12–13</span>
+                <span class="pill">14–16</span>
+              </div>
+            </div>
+            <div class="card">
+              <span class="card-label">Duration</span>
+              <div class="pill-row">
+                <span class="pill">4 Progressive Rounds</span>
+                <span class="pill">3 Weeks Per Round</span>
+              </div>
+            </div>
+            <div class="card">
+              <span class="card-label">Schedule</span>
+              <div class="pill-row">
+                <span class="pill">Monday–Friday</span>
+                <span class="pill">3.5 Hours Daily</span>
+              </div>
+            </div>
+            <div class="card violet">
+              <span class="card-label">Learning Stack</span>
+              <div class="pill-row">
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Programming</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Robotics</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">English</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">ICT Foundations</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">AI Literacy</span>
+                <span class="pill" style="border-color:var(--accent-3); color:var(--accent-3);">Computational Thinking</span>
+              </div>
+            </div>
+          </div>
+
+          <h3 style="margin-top:28px;">Final Outcome</h3>
+          <p class="lede">Every student leaves with:</p>
+          <div class="outcome-grid">
+            <div class="outcome-item"><span class="tick">✓</span><span>1 Scratch Game Portfolio</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>1 Mobile App</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>1 Python Project</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>1 Website</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>1 Arduino Robotics Project</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>1 Smart Robot Car</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>English Presentation Skills</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>ICT &amp; Baccalaureate Readiness</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>Digital Portfolio Certificate</span></div>
+            <div class="outcome-item"><span class="tick">✓</span><span>Clear Pathway Into Advanced Academy Programs</span></div>
+          </div>
+
+          <div class="card accent" style="margin-top:28px;">
+            <p style="margin:0;">This structure creates a premium, scalable, high-retention academy ecosystem that serves students, satisfies parents, strengthens your brand, and continuously feeds long-term programming, robotics, AI, and English tracks throughout the year.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <footer>
+      FUTURE TECH CAMP™ — BUILD · CODE · CREATE · INNOVATE
+    </footer>
+
+  </div>
+</div>
+
+<script>
+  // Mobile nav toggle
+  const sidenav = document.getElementById('sidenav');
+  const overlay = document.getElementById('overlay');
+  const menuBtn = document.getElementById('menuBtn');
+  const navClose = document.getElementById('navClose');
+
+  function openNav(){
+    sidenav.classList.add('open');
+    overlay.classList.add('show');
+  }
+  function closeNav(){
+    sidenav.classList.remove('open');
+    overlay.classList.remove('show');
+  }
+  menuBtn && menuBtn.addEventListener('click', openNav);
+  navClose && navClose.addEventListener('click', closeNav);
+  overlay.addEventListener('click', closeNav);
+
+  // Close drawer on link click (mobile)
+  document.querySelectorAll('.nav-list a').forEach(link => {
+    link.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) closeNav();
+    });
+  });
+
+  // Scrollspy: highlight active section in sidebar
+  const sections = document.querySelectorAll('main .section');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute('id');
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(sec => observer.observe(sec));
+</script>
+
+</body>
+</html>
